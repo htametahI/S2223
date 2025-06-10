@@ -48,3 +48,15 @@
 *README.html
 *README_cache/
 #*README_files/
+
+AnalysisTrees/
+FragmentTrees/
+HistFiles/
+BranchFiles/
+sorted/
+SortCode/SortData
+SortCode/SortDataIntoBranches
+SortCode/MakePlots
+SortCode/Clock
+SortCode/Alphacal
+AutoDict*

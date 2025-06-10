@@ -446,27 +446,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
           siE->Fill(si_hit->GetEnergy());
           siET->Fill(si_hit->GetTime() / 1e9, si_hit->GetEnergy());
         }
-        
-        // --------------------------EMMA-TIGRESS energy coincidence without adddback----------------------------
-
-        for (int m = 0; m < emma->GetSiMultiplicity(); m++) {
-			si_hit = emma->GetSiHit(m);
-			if (tigress) {
-				for (int j = 0; j < tigress->GetAddbackMultiplicity(); j++) {
-					tig_hit = tigress->GetAddbackHit(j);
-					suppAdd = tig_hit->BGOFired(); 
-					double tig_time = tig_hit->GetTime() - si_hit->GetTime();
-					if (tig_time > 820 && tig_time < 1000){
-						if (!suppAdd && tig_hit->GetEnergy() > 50) {
-							emmaTigressCoincNoAddback->Fill(tig_hit->GetDoppler(0.0681));	
-						}
-					}
-				}
-			}
-		}
 		
-		tigress->ResetAddback(); 
-
 
         double ICtime = -1;
         for (int j = 0; j < emma->GetICMultiplicity(); j++)
@@ -677,6 +657,32 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                 tempIC += ic_hit->GetEnergy();
             }
             emma_dE_E->Fill(si_hit->GetEnergy(),tempIC);
+            if ( tigress ) {  
+			    for( int t =0; t< tigress->GetAddbackMultiplicity(); t++){
+					add_hit    = tigress->GetAddbackHit(t);
+					suppAdd = add_hit->BGOFired();
+					
+					addemmatof->Fill(add_hit->GetTime() - si_hit->GetTime());
+					addE_tof->Fill((add_hit->GetTime() - si_hit->GetTime()), add_hit->GetEnergy());
+					addemmatofdet->Fill(add_hit->GetArrayNumber(),add_hit->GetTime() - si_hit->GetTime());
+					
+					emma_tig_dt_E->Fill(si_hit->GetTime()-add_hit->GetTime(),add_hit->GetDoppler(particle_betaDoppler));
+					
+					if(((add_hit->GetTime() - si_hit->GetTime()) > 820) && ((add_hit->GetTime() - si_hit->GetTime()) < 1000)){
+						double particle_beta = particle_betaDoppler;
+						if(!suppAdd && add_hit->GetEnergy()>50){
+							addDopp_emma->Fill(add_hit->GetDoppler(particle_beta));
+							if(add_hit->GetArrayNumber()>48){
+								addDopp_emma_lampshade->Fill(add_hit->GetDoppler(particle_beta));
+							}else{
+								addDopp_emma_corona->Fill(add_hit->GetDoppler(particle_beta));
+							}
+						}
+					}
+				}
+			}// end of this tigress loop
+		tigress->ResetAddback(); 
+		// =================================
            
         }
 

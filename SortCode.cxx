@@ -7,7 +7,7 @@
 // 6/9/2020
 // D. Yates
 // 26/11/2024
-
+// g++ SortCodeTest2.cxx -std=c++0x -I$GRSISYS/include -L$GRSISYS/lib `grsi-config --cflags --all-libs --GRSIData-libs` -I$GRSISYS/GRSIData/include -L$GRSISYS/GRSIData/lib `root-config --cflags --libs` -lTreePlayer -lMathMore -lSpectrum -lTTigress -lTEmma -lMinuit -lTS3 -lX11 -o SortTigress2
 #define Sortcode_cxx
 #include "SortCode.h"
 

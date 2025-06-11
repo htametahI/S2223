@@ -9,6 +9,7 @@
 // 26/11/2024
 
 
+
 #define Sortcode_cxx
 #include "SortCodeTest.h"
 
@@ -32,6 +33,7 @@ bool BGtofGate(Double_t Time)
   else
     return false;
 }
+
 
 bool gate1D(Double_t value, Double_t min, Double_t max)
 {
@@ -73,6 +75,8 @@ bool goodIC(double tempIC[])
   return good;
 }
 
+
+
 double pi = TMath::Pi();
 double xp[2] = {-16.0, 16.0};     // PGAC X-position 1D gate, minimum and maximum . Change !!!
 double yp[2] = {-20.0, +22.0};  // PGAC T-position 1D gate, minimum and maximum. Change !!!
@@ -93,7 +97,7 @@ double tempIC2D[5][4];
 double s3_x_offset = -0.0; // S3 x offset (mm) will need to be recalculated with beam
 double s3_y_offset = -0.0; // S3 y offset (mm) will need to be recalculated with beam
 double s3_z_offset = 0.0; // S3 z offset (mm) will need to be calculated.
-double particle_beta;
+double particle_beta = 0.0681;
 double thetalab;
 double exc;
 double ekin;
@@ -264,6 +268,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
     double ringEnergy = 0.0; //keeping track of total energy in case of split hits
     double sectorEnergy = 0.0;
     s3->SetMultiHit();
+    
 
     for (int i = 0; i < s3->GetRingMultiplicity(); i++){
         ring_hit = s3->GetRingHit(i);
@@ -282,7 +287,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
           s3_rings_sectors_singlesTvSec->Fill(s3->GetSectorHit(j)->GetSector(), s3->GetSectorHit(j)->GetTime() - ring_hit->GetTime());
           s3_rings_sectors_singlesTvRing->Fill(ring_hit->GetRing(), s3->GetSectorHit(j)->GetTime() - ring_hit->GetTime());
           s3_rings_sectors_singlesTvE->Fill(s3->GetSectorHit(j)->GetEnergy(), s3->GetSectorHit(j)->GetTime() - ring_hit->GetTime());
-
+          
 			if(std::abs(s3->GetSectorHit(j)->GetTime() - ring_hit->GetTime()) > 100.)
 				continue;
 		  ringsT->Fill(ring_hit->GetRing(), ring_hit->GetEnergy());
@@ -681,7 +686,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
 					}
 				}
 			}// end of this tigress loop
-		tigress->ResetAddback(); 
+			tigress->ResetAddback(); 
 		// =================================
            
         }
@@ -698,6 +703,9 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
 					s3pos.SetY(s3pos.Y() + s3_y_offset);
 					s3pos.SetZ(s3pos.Z() + s3_z_offset);
 					s3emmatof->Fill(s3hit->GetTime() - em_hit->GetTime());
+					
+					//tigress->ResetAddback();
+					
                     if(s3hit->GetTime() - em_hit->GetTime() > 450 && s3hit->GetTime() - em_hit->GetTime() < 620){
 						thetalab = s3pos.Theta();
 						ekin = s3hit->GetEnergy();
@@ -708,28 +716,29 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
 						emma_s3_E->Fill(ekin);
 						emma_s3_E_ring->Fill(s3hit->GetRing(),ekin);
 
-						// =======================PROBLEM!!!!!!==================
-						//tigress->ResetAddback(); 
-                        //if(tigress){
-                            //for(int t=0;t<tigress->GetAddbackMultiplicity();t++){
-                                //add_hit = tigress->GetAddbackHit(t);
-                                //suppAdd = add_hit->BGOFired();
-                                ////tigress->ResetAddback(); 
-                                //if(!suppAdd && add_hit->GetEnergy() > 50 && add_hit->GetTime() - em_hit->GetTime() > 850 && add_hit->GetTime() - em_hit->GetTime() < 1020){
-                                    //emma_s3_exc_addback->Fill(add_hit->GetDoppler(particle_beta),exc);
-                                    //emma_s3_E_ring_tig->Fill(s3hit->GetRing(),ekin);
+                        if(tigress){
+                            for(int t=0;t<tigress->GetAddbackMultiplicity();t++){
+                                add_hit = tigress->GetAddbackHit(t);
+                                suppAdd = add_hit->BGOFired();
+                                
+                                if(!suppAdd && add_hit->GetEnergy() > 50 && add_hit->GetTime() - em_hit->GetTime() > 850 && add_hit->GetTime() - em_hit->GetTime() < 1020){
+                                    emma_s3_exc_addback->Fill(add_hit->GetDoppler(particle_beta),exc);
+                                    emma_s3_E_ring_tig->Fill(s3hit->GetRing(),ekin);
+                                    // --------------------THIS PART IS CAUSING SEG FAULTS???------------- 
                                     //if (Mg26_cut->IsInside(si_hit->GetEnergy(), tempIC) && add_hit->GetEnergy() > 1789 && add_hit->GetEnergy() > 1830){
                                         //s3_E_theta_gated_PIDG_gamG->Fill(exc);
                                     //}
-								//}   
-                            //}
-                        //}
-                        //tigress->ResetAddback(); 
-                    }
+								}
+								   
+                            
+							}
+                        
+						}
+						//tigress->ResetAddback(); 
 
-                }
-            }
-		}
+					}
+				}
+			}
 
 // ====================================EMMA + S3 + TIGRESS coincidences=======================================
         if (s3 && tigress){ 
@@ -746,7 +755,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
 							s3pos.SetZ(s3pos.Z() + s3_z_offset);
 	                   
 	                    if(emma){
-							for (int j = 0; j < emma->GetMultiplicity(); j++){
+				for (int j = 0; j < emma->GetMultiplicity(); j++){
 	                            em_hit = emma->GetEmmaHit(j);
 								s3emmatof->Fill(s3hit->GetTime() - em_hit->GetTime());
 								if (tofGate((s3hit->GetTime() - em_hit->GetTime()))){ // TOF gate and
@@ -800,9 +809,10 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
 		}     //si
 		tigress->ResetAddback(); 
     }
+}
       
       
-    } // this is the end bracket 
+} // this is the end bracket 
 	
 
   
@@ -886,7 +896,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
 
   myfile->Write();
   myfile->Close();
-}
+} 
 int main(int argc, char **argv)
 {
 
@@ -946,3 +956,4 @@ int main(int argc, char **argv)
 
   return 0;
 }
+

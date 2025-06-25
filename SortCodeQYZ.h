@@ -42,7 +42,7 @@ TH1F *s3E, *s3RingsSectorsSinglesT, *s3RingCounts, *s3SecCounts, *s3Rate;
 TH2F *s3Rings, *s3Sectors, *s3RingsT, *s3SectorsT, *siETheta, *s3Hitmap, *s3RingsSectors;
 
 // TOF
-
+TH1F *s3EmmaTof, *ssbICTof, *ssbSiTof, *tigICTof, *tigAnodeTof;
 
 // PID
 
@@ -65,6 +65,7 @@ void SortCode::Initialise() {
   	s3List = new TList;
  	emmaList = new TList;
 	PIDList = new TList; 
+	tofList = new TList; 
   	printf("Creating histograms\n");
   	
   	// TIGRESS 
@@ -112,7 +113,20 @@ void SortCode::Initialise() {
 	s3RingsSectorsSinglesT = new TH1F("s3RingsSectorsSinglesT","S3 sectorT vs ringT Multiplicity 1;Sector Time - Ring Time",2048,-1024,1024);
 	s3RingsSectorsSinglesT->Add(s3RingsSectorsSinglesT); 
 	
-	// PID
+	// TOF
+	TH1F *s3EmmaTof, *ssbICTof, *ssbSiTof, *tigICTof, *tigAnodeTof;
+	s3EmmaTof = new TH1F("s3EmmaTof", "S3 EMMA TOF; S3 EMMA Time Difference(ns);", 20000, -10000, 10000);
+	tofList->Add(s3EmmaTof); 
+	ssbICTof = new TH1F("ssbICTof", "SSB IC TOF; SSB IC Time Difference(ns);", 20000, -10000, 10000);
+	tofList->Add(ssbICTof);
+	ssbSiTof = new TH1F("ssbSiTof", "SSB Si TOF; SSB Si Time Difference(ns);", 20000, -10000, 10000);
+	tofList->Add(ssbSiTof);
+	tigICTof = new TH1F("tigICTof", "TIGRESS IC TOF; TIGRESS IC Time Difference(ns);", 20000, -10000, 10000);
+	tofList->Add(tigICTof);
+	tigAnodeTof = new TH1F("tigAnodeTof", "TIGRESS EMMA Anode TOF; TIGRESS EMMA Anode Time Difference(ns);", 20000, -10000, 10000);
+	tofList->Add(tigAnodeTof);
+	 
+
 	
 	
 	

@@ -85,8 +85,8 @@ void SortCode::Initialise() {
 	emmaList->Add(emmaPgac);
 	
 	emmaSiE = new TH1F("EMMASiE", "EMMA Focal Plane Silicon Energy;Energy (keV);Counts", 16384, 0, 16384);
-   emmaList->Add(emmaSiE);
-   emmadEE = new TH2F("emmadEE","Si Energy VS IC SUM, EMMA;Silicon Energy (arb.);IC Sum (arb.)",4096,0,4096,16384,0,16384);
+  	emmaList->Add(emmaSiE);
+  	emmadEE = new TH2F("emmadEE","Si Energy VS IC SUM, EMMA;Silicon Energy (arb.);IC Sum (arb.)",4096,0,4096,16384,0,16384);
   	emmaList->Add(emmadEE);
  	emmaICSumVSi = new TH2F("emmaICSumVSi","Si Energy VS IC SUM;Silicon Energy (arb.);IC Sum (arb.)",4096,0,4096,16384,0,16384);
   	emmaList->Add(emmaICSumVSi);
@@ -102,6 +102,7 @@ void SortCode::Initialise() {
   	emmaList->Add(emmaIC2VSi);
   	emmaIC3VSi = new TH2F("emmaIC3VSi","Si Energy VS IC3",4096,0,4096,16384,0,16384);
   	emmaList->Add(emmaIC3VSi);
+	
   	
   	// S3
 	s3E = new TH1F("S3 Energy","S3 Energy;Energy (keV);Counts",8192,0,8192);

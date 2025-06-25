@@ -165,6 +165,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
     
     TReaction *reac = new TReaction("22Ne", "7Li", "3H", "26Mg", EBeam, 0, true);
     
+    
     //Defining Pointers
     TEmmaHit *em_hit, *ic_hit, *si_hit, *ssb_hit, *trigger_hit, *anode_hit;
     TTigressHit *tig_hit, *add_hit, *add_hit2;
@@ -175,6 +176,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
         //s3->SetFrontBackTime(140); // Needed to build S3 pixels properly
         s3->SetFrontBackTime(1000);
         s3->SetFrontBackEnergy(0.9);
+        
     }
     
     //S3 detector rotation

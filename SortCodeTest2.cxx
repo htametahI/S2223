@@ -91,6 +91,7 @@ double gamma_1274_E[2] = {1250, 1300}; 	// 1274keV gamma 26Mg
 double gamma_1808_E[2] = {1789, 1840};	// 1808=keV gamma 26Mg 
 
 
+
 double tempIC;
 double tempICArray[4];
 double tempIC2D[5][4];

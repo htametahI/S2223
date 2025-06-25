@@ -153,31 +153,32 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
   if (AnalysisTree->FindBranch("TS3"))
   {
     AnalysisTree->SetBranchAddress("TS3", &s3);
+    AnalysisTree->SetBranchAddress("TS3", &s3);
   }
   else
   {
     cout << "Branch 'TS3' not found! TS3 variable is NULL pointer" << endl;
   }
 
-
-  TSRIM *srim_22Ne_in_LiF = new TSRIM;
-  srim_22Ne_in_LiF->ReadEnergyLossFile("22Ne_in_LiF.txt");
+  // ====== Energy lost already calculated in LISE++ ==================
+  //TSRIM *srim_22Ne_in_LiF = new TSRIM;
+  //srim_22Ne_in_LiF->ReadEnergyLossFile("22Ne_in_LiF.txt");
   
-  double EBeam = 3.0 * 21.9; //22Ne beam
-  printf("Beam energy: %f MeV\n", EBeam);
+  double EBeam = 64.14166; // Beam energy half way into the target
+  //printf("Beam energy: %f MeV\n", EBeam);
 
 
   //adjust beam energy for middle of the target based on 22Ne through LiF.
-  double targetThicknessugcm2 = 500.;//approximately 500 ug/cm2 LiF targets
-  double targetThicknessum = 6.078; //500 ug/cm2 LiF are approx 6 um thick.
+  //double targetThicknessugcm2 = 500.;//approximately 500 ug/cm2 LiF targets
+  //double targetThicknessum = 6.078; //500 ug/cm2 LiF are approx 6 um thick.
 
-  EBeam = srim_22Ne_in_LiF->GetAdjustedEnergy(EBeam*1000,targetThicknessum/2.0,0.001)/1000.;
+  //EBeam = srim_22Ne_in_LiF->GetAdjustedEnergy(EBeam*1000,targetThicknessum/2.0,0.001)/1000.;
   //*1000 and /1000 convert from MeV to keV and back. we use /2.0 to get the beam energy in the middle of the target. 0.001 is the integration step size
 
 
-  printf("Adjusted Beam energy: %f MeV\n", EBeam);
+  //printf("Adjusted Beam energy: %f MeV\n", EBeam);
 
-  TReaction *reac = new TReaction("22Ne", "7Li", "3H", "26Mg", EBeam, 0, true);
+  TReaction *reac = new TReaction("22Ne", "7Li", "3H", "26Mg", 64.14166, 0, true);
 
   //Defining Pointers
   TEmmaHit *em_hit, *ic_hit, *si_hit, *ssb_hit, *trigger_hit, *anode_hit;
@@ -189,6 +190,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
     //s3->SetFrontBackTime(140); // Needed to build S3 pixels properly
     s3->SetFrontBackTime(1000);
     s3->SetFrontBackEnergy(0.9);
+    
   }
 
   //S3 detector rotation
@@ -202,20 +204,22 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
 	int	tig_emma_counter = 0; 
 	int	tig_counter = 0;
 	int emma_counter = 0;
-
 	int	counter_ssb = 0;
 	int	counter_na22 = 0;
-	
 	
   double_t particle_betaDoppler = 0.0681; //approx 26Mg at 10.949 MeV exc recoil after carbon backing.
   cout << endl << "particle_beta: " << particle_betaDoppler << endl;
 
   std::cout << "\nLoading cuts now";
   TFile *cutFile = new TFile("PID_Cuts.root");
+  
   TCutG *F19_cut = (TCutG*)cutFile->Get("F19_cut");
   TCutG *Na24_cut = (TCutG*)cutFile->Get("Ne22_cut");//the cut itself is called "Ne22" but it is actually 24Na.
   TCutG *Mg26_cut = (TCutG*)cutFile->Get("Mg26_cut");
   TCutG *Al26_cut = (TCutG*)cutFile->Get("Al26_cut");
+  
+  //TFile *cutFile = new TFile("26MgCut.root");
+  //TCutG *Mg26_cut = (TCutG*)cutFile->Get("CUTG");
 
 
   printf("\nSorting analysis events...\n");
@@ -242,23 +246,34 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
 				tig_emma_counter++;
 			}
 		}
+		
+		
+	// ======== just plotting s3 energy here before everything else happens: 
+	for (int i = 0; i < s3->GetPixelMultiplicity(); i++){
+        s3hit = s3->GetPixelHit(i);
+        s3ETest->Fill(s3hit->GetEnergy());
+        s3Charge->Fill(s3hit->GetCharge()); 
+    }
+    // ===================================================
+    
+    
    
-    // ---------------- TIGRESS energy fill -----------------
+    // ---------------- TIGRESS energy fill -s----------------
    
     if (tigress){
-      for (int t = 0; t < tigress->GetMultiplicity(); t++){
-        tig_hit = tigress->GetTigressHit(t);
-        if(tig_hit != NULL){
-          suppTig = tig_hit->BGOFired();
-          if (!suppTig && tig_hit->GetEnergy() > 15){
-            tigE->Fill(tig_hit->GetEnergy());
-            tigE_ANum->Fill(tig_hit->GetArrayNumber(), tig_hit->GetEnergy());
-            tigE_theta->Fill(tig_hit->GetEnergy(),TMath::RadToDeg()*(tig_hit->GetPosition().Theta()));
-            tigRate->Fill(tig_hit->GetTime()/pow(10,9));
-            tigRate_ANum->Fill(tig_hit->GetTime()/pow(10,9),tig_hit->GetArrayNumber());
-          }
-        }
-      }
+		for (int t = 0; t < tigress->GetMultiplicity(); t++){
+			tig_hit = tigress->GetTigressHit(t);
+			if(tig_hit != NULL){
+				suppTig = tig_hit->BGOFired();
+				if (!suppTig && tig_hit->GetEnergy() > 15){
+					tigE->Fill(tig_hit->GetEnergy());
+					tigE_ANum->Fill(tig_hit->GetArrayNumber(), tig_hit->GetEnergy());
+					tigE_theta->Fill(tig_hit->GetEnergy(),TMath::RadToDeg()*(tig_hit->GetPosition().Theta()));
+					tigRate->Fill(tig_hit->GetTime()/pow(10,9));
+					tigRate_ANum->Fill(tig_hit->GetTime()/pow(10,9),tig_hit->GetArrayNumber());
+				}
+			}
+		}
     }
     
     { // -------------- S3 singles ----------------
@@ -315,6 +330,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
     for (int i = 0; i < s3->GetPixelMultiplicity(); i++){
         s3hit = s3->GetPixelHit(i);
         s3_E->Fill(s3hit->GetEnergy());
+        //s3_E->Fill(s3hit->GetCharge());
         //s3pos = s3hit->GetPosition(-101.25 * TMath::Pi() / 180.,true);
         s3pos = s3hit->GetPosition(s3_phi_offset,true); 
         s3pos.SetX(s3pos.X() + s3_x_offset);
@@ -324,7 +340,9 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
         hitmap->Fill(s3pos.X(), s3pos.Y());
         s3Rate->Fill(s3hit->GetTime()/pow(10,9));
         thetalab = s3pos.Theta();
+        
         ekin = s3hit->GetEnergy();
+        //cout << "\ntriton energy is" << ekin; 
         exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);
         reac->SetExcEnergy(exc);
         excE->Fill(exc);
@@ -337,33 +355,32 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
             for (int t = 0; t < tigress->GetAddbackMultiplicity(); t++){
 				add_hit = tigress->GetAddbackHit(t);
 				suppAdd = add_hit->BGOFired();
-					if (!suppAdd && add_hit->GetEnergy() > 15){
+				if (!suppAdd && add_hit->GetEnergy() > 15){
+					
+					if(s3hit->GetEnergy() > 600. && s3hit->GetEnergy() < 2500.)
+					addT_s3T->Fill(add_hit->GetTime() - s3hit->GetTime());  
+					  
+					if (gate1D((add_hit->GetTime() - s3hit->GetTime()), tigs3T[0], tigs3T[1])){
+						thetacm = reac->ConvertThetaLabToCm(thetalab, 2);
+						rekin = reac->GetTLabFromThetaCm(TMath::Pi() - thetacm, 3) * 1e3;
+						particle_beta = reac->AnalysisBeta(rekin * 1e-3, 3);
+						recoiltheta = reac->ConvertThetaCmToLab(thetacm, 3);
+						recoil_vec.SetMagThetaPhi(1., recoiltheta, s3pos.Phi() - TMath::Pi());
+						addDopp->Fill(add_hit->GetDoppler(particle_beta, &recoil_vec));
+						addDopp_ANum_s3->Fill(add_hit->GetArrayNumber(), add_hit->GetDoppler(particle_beta, &recoil_vec));
+						addDopp_exc->Fill(add_hit->GetDoppler(particle_beta, &recoil_vec), exc);
+						addE_s3_E->Fill(add_hit->GetEnergy(), s3hit->GetEnergy());
+						addDopp_s3_E->Fill(add_hit->GetDoppler(particle_beta, &recoil_vec), s3hit->GetEnergy());
+						s3_E_theta_coinc->Fill(s3pos.Theta() * r2d, s3hit->GetEnergy());
 						
-						if(s3hit->GetEnergy() > 600. && s3hit->GetEnergy() < 2500.)
-						addT_s3T->Fill(add_hit->GetTime() - s3hit->GetTime());  
-						  
-						if (gate1D((add_hit->GetTime() - s3hit->GetTime()), tigs3T[0], tigs3T[1])){
-							thetacm = reac->ConvertThetaLabToCm(thetalab, 2);
-							rekin = reac->GetTLabFromThetaCm(TMath::Pi() - thetacm, 3) * 1e3;
-							particle_beta = reac->AnalysisBeta(rekin * 1e-3, 3);
-							recoiltheta = reac->ConvertThetaCmToLab(thetacm, 3);
-							recoil_vec.SetMagThetaPhi(1., recoiltheta, s3pos.Phi() - TMath::Pi());
-							addDopp->Fill(add_hit->GetDoppler(particle_beta, &recoil_vec));
-							addDopp_ANum_s3->Fill(add_hit->GetArrayNumber(), add_hit->GetDoppler(particle_beta, &recoil_vec));
-							addDopp_exc->Fill(add_hit->GetDoppler(particle_beta, &recoil_vec), exc);
-							addE_s3_E->Fill(add_hit->GetEnergy(), s3hit->GetEnergy());
-							addDopp_s3_E->Fill(add_hit->GetDoppler(particle_beta, &recoil_vec), s3hit->GetEnergy());
-							s3_E_theta_coinc->Fill(s3pos.Theta() * r2d, s3hit->GetEnergy());
-							
-								if (add_hit->GetDoppler(particle_beta,&recoil_vec) > 1790 && add_hit->GetDoppler(particle_beta,&recoil_vec) < 1840){
-									s3_E_ringNumb_1808_gated->Fill(s3hit->GetRing(),s3hit->GetEnergy());
-								}        
-
-						}
+						if (add_hit->GetDoppler(particle_beta,&recoil_vec) > 1790 && add_hit->GetDoppler(particle_beta,&recoil_vec) < 1840){
+							s3_E_ringNumb_1808_gated->Fill(s3hit->GetRing(),s3hit->GetEnergy());
+						}        
 					}
+				}
             }
-          
         }
+        //tigres->ResetAddback(); 
         tigress->ResetAddback(); 
 // --------------------------------------S3 ADDBACK BLOCK ENDS------------------------------------------------
 
@@ -374,24 +391,25 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
 // ---------------------------------------EMMA DATA BEGINS--------------------------------------------------	
 	if (emma) { // EMMA singles
 
-      for (int l = 0; l < emma->GetSSBMultiplicity(); l++){ // Get SSB hits
-        ssb_hit = emma->GetSSBHit(l);
-        ssbE[ssb_hit->GetDetector()]->Fill(ssb_hit->GetEnergy());
-        ssbET[ssb_hit->GetDetector()]->Fill(ssb_hit->GetTime() / 1e9, ssb_hit->GetEnergy());
-        for (int j = 0; j < emma->GetICMultiplicity(); j++){
-          ic_hit = emma->GetICHit(j);
-          ssbICtof->Fill(ssb_hit->GetTime() - ic_hit->GetTime());
-        }
-        for (int k = 0; k < emma->GetSiMultiplicity(); k++){
-          si_hit = emma->GetSiHit(k);
-          ssbSItof->Fill(ssb_hit->GetTime() - si_hit->GetTime());
-        }
-        for (int k = 0; k < emma->GetTriggerMultiplicity(); k++) {
-          trigger_hit = emma->GetTriggerHit(k); //EMMA trigger (sent to TIGRESS DAQ)
-          ssbEMTtof->Fill(ssb_hit->GetTime() - trigger_hit->GetTime());
-          emTrigE->Fill(trigger_hit->GetEnergy()); 
-        }
-      }
+		for (int l = 0; l < emma->GetSSBMultiplicity(); l++){ // Get SSB hits
+			ssb_hit = emma->GetSSBHit(l);
+			ssbE[ssb_hit->GetDetector()]->Fill(ssb_hit->GetEnergy());
+			ssbET[ssb_hit->GetDetector()]->Fill(ssb_hit->GetTime() / 1e9, ssb_hit->GetEnergy());
+			for (int j = 0; j < emma->GetICMultiplicity(); j++){
+			  ic_hit = emma->GetICHit(j);
+			  ssbICtof->Fill(ssb_hit->GetTime() - ic_hit->GetTime());
+			}
+			
+			for (int k = 0; k < emma->GetSiMultiplicity(); k++){
+			  si_hit = emma->GetSiHit(k);
+			  ssbSItof->Fill(ssb_hit->GetTime() - si_hit->GetTime());
+			}
+			for (int k = 0; k < emma->GetTriggerMultiplicity(); k++) {
+			  trigger_hit = emma->GetTriggerHit(k); //EMMA trigger (sent to TIGRESS DAQ)
+			  ssbEMTtof->Fill(ssb_hit->GetTime() - trigger_hit->GetTime());
+			  emTrigE->Fill(trigger_hit->GetEnergy()); 
+			}
+		}
 // ================================= TIGRESS - EMMA =============================
 		
       if(tigress){
@@ -687,32 +705,35 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
 				}
 			}// end of this tigress loop
 			tigress->ResetAddback(); 
-		// =================================
-           
         }
+        
+        //==========================================EXCITATION ENERGY BEGINS ======================================
 
         if( s3 && emma->GetICMultiplicity()>0){
 
             double ICtime = -1;
+            exc = -1; 
             for (int j = 0; j < emma->GetMultiplicity(); j++){
                 em_hit = emma->GetEmmaHit(j);
 				for (int i = 0; i < s3->GetPixelMultiplicity(); i++){
 					s3hit = s3->GetPixelHit(i);
-                    s3pos = s3hit->GetPosition(true);
-					s3pos.SetX(s3pos.X() + s3_x_offset);
-					s3pos.SetY(s3pos.Y() + s3_y_offset);
-					s3pos.SetZ(s3pos.Z() + s3_z_offset);
+                    s3pos = s3hit->GetPosition(s3_phi_offset, true); // addded rotation of S3, apparently GRSISort rotated it
+					//s3pos.SetX(s3pos.X() + s3_x_offset);				// these are all 0s 
+					//s3pos.SetY(s3pos.Y() + s3_y_offset);
+					//s3pos.SetZ(s3pos.Z() + s3_z_offset);
 					s3emmatof->Fill(s3hit->GetTime() - em_hit->GetTime());
-					
 					//tigress->ResetAddback();
 					
-                    if(s3hit->GetTime() - em_hit->GetTime() > 450 && s3hit->GetTime() - em_hit->GetTime() < 620){
+                    if(s3hit->GetTime() - em_hit->GetTime() > 400 && s3hit->GetTime() - em_hit->GetTime() < 550){
 						thetalab = s3pos.Theta();
+						
+						// cout << "\ntheta lab is" << thetalab; 
 						ekin = s3hit->GetEnergy();
-						exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2); //Energy conversion from keV to MeV
-                        emma_s3_exc->Fill(exc);
+						//exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2); //Energy conversion from keV to MeV
+						exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);
+                        emma_s3_exc->Fill(exc);   							// Filling excitation energy gated on EMMA
                         emma_s3_exc_ring->Fill(s3hit->GetRing(),exc);
-      
+						
 						emma_s3_E->Fill(ekin);
 						emma_s3_E_ring->Fill(s3hit->GetRing(),ekin);
 
@@ -729,90 +750,89 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                                         //s3_E_theta_gated_PIDG_gamG->Fill(exc);
                                     //}
 								}
-								   
-                            
 							}
                         
 						}
-						//tigress->ResetAddback(); 
-
+						tigress->ResetAddback(); 
 					}
 				}
 			}
+		// ==================================== Excitation Energy ENDS ================================
+		
 
 // ====================================EMMA + S3 + TIGRESS coincidences=======================================
-        if (s3 && tigress){ 
-            for (int i = 0; i < s3->GetPixelMultiplicity(); i++){
-				s3hit = s3->GetPixelHit(i);
-				for (int t = 0; t < tigress->GetAddbackMultiplicity(); t++){
-	                add_hit = tigress->GetAddbackHit(t);
-	                suppAdd = add_hit->BGOFired();
-	                if (!suppAdd && add_hit->GetEnergy() > 15){
-						if (gate1D((add_hit->GetTime() - s3hit->GetTime()), tigs3T[0], tigs3T[1])){
-							s3pos = s3hit->GetPosition(true);
-							s3pos.SetX(s3pos.X() + s3_x_offset);
-							s3pos.SetY(s3pos.Y() + s3_y_offset);
-							s3pos.SetZ(s3pos.Z() + s3_z_offset);
-	                   
-	                    if(emma){
-				for (int j = 0; j < emma->GetMultiplicity(); j++){
-	                            em_hit = emma->GetEmmaHit(j);
-								s3emmatof->Fill(s3hit->GetTime() - em_hit->GetTime());
-								if (tofGate((s3hit->GetTime() - em_hit->GetTime()))){ // TOF gate and
-									excE_tg->Fill(exc);
-									excE_theta_tg->Fill(s3hit->GetTheta() * r2d, exc);
-									addDopp_tg->Fill(add_hit->GetDoppler(particle_beta, &recoil_vec));
-									addDopp_ANum_tg->Fill(add_hit->GetArrayNumber(), add_hit->GetEnergy());
-									addDopp_exc_tg->Fill(add_hit->GetDoppler(particle_beta, &recoil_vec), exc);
-									s3_E_gated->Fill(s3hit->GetEnergy());
-									s3_E_theta_gated->Fill(s3pos.Theta() * r2d, s3hit->GetEnergy());
-									hitmap_time_gated->Fill(s3pos.X(), s3pos.Y());
-	
-									//TIGRESS-TIGRESS-S3 time gated
-									for (int t2 = t+1; t2 < tigress->GetAddbackMultiplicity(); t2++){
-										add_hit2 = tigress->GetAddbackHit(t2);
-										suppAdd = add_hit2->BGOFired();
-										if (gate1D((add_hit->GetTime() - add_hit2->GetTime()), tigtigT[0], tigtigT[1])){
-											addE_addE_tofg->Fill(add_hit->GetEnergy(),add_hit2->GetEnergy());
-											addE_addE_tofg->Fill(add_hit2->GetEnergy(),add_hit->GetEnergy()); //symmetrized
-											addDopp_addDopp_tg->Fill(add_hit->GetDoppler(particle_beta, &recoil_vec), add_hit2->GetDoppler(particle_beta, &recoil_vec));
-											addDopp_addDopp_tg->Fill(add_hit2->GetDoppler(particle_beta, &recoil_vec), add_hit->GetDoppler(particle_beta, &recoil_vec)); //symmetrized
+	        if (s3 && tigress){ 
+	            for (int i = 0; i < s3->GetPixelMultiplicity(); i++){
+					s3hit = s3->GetPixelHit(i);
+					for (int t = 0; t < tigress->GetAddbackMultiplicity(); t++){
+		                add_hit = tigress->GetAddbackHit(t);
+		                suppAdd = add_hit->BGOFired();
+		                if (!suppAdd && add_hit->GetEnergy() > 15){
+							if (gate1D((add_hit->GetTime() - s3hit->GetTime()), tigs3T[0], tigs3T[1])){
+								s3pos = s3hit->GetPosition(true);
+								s3pos.SetX(s3pos.X() + s3_x_offset);
+								s3pos.SetY(s3pos.Y() + s3_y_offset);
+								s3pos.SetZ(s3pos.Z() + s3_z_offset);
+		                   
+			                    if(emma){
+									for (int j = 0; j < emma->GetMultiplicity(); j++){
+			                            em_hit = emma->GetEmmaHit(j);
+										s3emmatof->Fill(s3hit->GetTime() - em_hit->GetTime());
+										if (tofGate((s3hit->GetTime() - em_hit->GetTime()))){ // TOF gate and
+											excE_tg->Fill(exc);
+											excE_theta_tg->Fill(s3hit->GetTheta() * r2d, exc);
+											addDopp_tg->Fill(add_hit->GetDoppler(particle_beta, &recoil_vec));
+											addDopp_ANum_tg->Fill(add_hit->GetArrayNumber(), add_hit->GetEnergy());
+											addDopp_exc_tg->Fill(add_hit->GetDoppler(particle_beta, &recoil_vec), exc);
+											s3_E_gated->Fill(s3hit->GetEnergy());
+											s3_E_theta_gated->Fill(s3pos.Theta() * r2d, s3hit->GetEnergy());
+											hitmap_time_gated->Fill(s3pos.X(), s3pos.Y());
+			
+											//TIGRESS-TIGRESS-S3 time gated
+											for (int t2 = t+1; t2 < tigress->GetAddbackMultiplicity(); t2++){
+												add_hit2 = tigress->GetAddbackHit(t2);
+												suppAdd = add_hit2->BGOFired();
+												if (gate1D((add_hit->GetTime() - add_hit2->GetTime()), tigtigT[0], tigtigT[1])){
+													addE_addE_tofg->Fill(add_hit->GetEnergy(),add_hit2->GetEnergy());
+													addE_addE_tofg->Fill(add_hit2->GetEnergy(),add_hit->GetEnergy()); //symmetrized
+													addDopp_addDopp_tg->Fill(add_hit->GetDoppler(particle_beta, &recoil_vec), add_hit2->GetDoppler(particle_beta, &recoil_vec));
+													addDopp_addDopp_tg->Fill(add_hit2->GetDoppler(particle_beta, &recoil_vec), add_hit->GetDoppler(particle_beta, &recoil_vec)); //symmetrized
+												}
+											}
+											if (emma->GetICMultiplicity() == 4 && emma->GetSiMultiplicity() > 0 && emma->GetSiHit(0)->GetEnergy() > 1000 && add_hit->GetDoppler(particle_beta, &recoil_vec) > 340 && add_hit->GetDoppler(particle_beta, &recoil_vec) < 350){ //add in the Si vs IC with the 350 keV gamma gate
+												for (int k = 0; k < emma->GetSiMultiplicity(); k++){
+													icSumVSi_gated_350->Fill(emma->GetSiHit(k)->GetEnergy(), tempIC);
+												}
+											}
+			
+											if (gate1D(em_hit->GetPosition().X(), xp[0], xp[1]) && gate1D(em_hit->GetPosition().Y(), yp[0], yp[1])){ // PGAC position gated
+												excE_PIDG->Fill(exc);
+												excE_theta_PIDG->Fill(s3hit->GetTheta() * r2d, exc);
+												addDopp_PIDG->Fill(add_hit->GetDoppler(particle_beta, &recoil_vec));
+												addDopp_ANum_PIDG->Fill(add_hit->GetArrayNumber(), add_hit->GetEnergy());
+												addDopp_exc_PIDG->Fill(add_hit->GetDoppler(particle_beta, &recoil_vec), exc);
+											}
+			                          
+										}else if (BGtofGate((s3hit->GetTime() - em_hit->GetTime()))){ // TOF gate
+											excE_bg->Fill(exc);
+											excE_theta_bg->Fill(s3hit->GetTheta() * r2d, exc);
+											addDopp_bg->Fill(add_hit->GetDoppler(particle_beta, &recoil_vec));
+											addDopp_ANum_bg->Fill(add_hit->GetArrayNumber(), add_hit->GetEnergy());
+											addDopp_exc_bg->Fill(add_hit->GetDoppler(particle_beta, &recoil_vec), exc);
 										}
 									}
-									if (emma->GetICMultiplicity() == 4 && emma->GetSiMultiplicity() > 0 && emma->GetSiHit(0)->GetEnergy() > 1000 && add_hit->GetDoppler(particle_beta, &recoil_vec) > 340 && add_hit->GetDoppler(particle_beta, &recoil_vec) < 350){ //add in the Si vs IC with the 350 keV gamma gate
-										for (int k = 0; k < emma->GetSiMultiplicity(); k++){
-											icSumVSi_gated_350->Fill(emma->GetSiHit(k)->GetEnergy(), tempIC);
-										}
-									}
-	
-									if (gate1D(em_hit->GetPosition().X(), xp[0], xp[1]) && gate1D(em_hit->GetPosition().Y(), yp[0], yp[1])){ // PGAC position gated
-										excE_PIDG->Fill(exc);
-										excE_theta_PIDG->Fill(s3hit->GetTheta() * r2d, exc);
-										addDopp_PIDG->Fill(add_hit->GetDoppler(particle_beta, &recoil_vec));
-										addDopp_ANum_PIDG->Fill(add_hit->GetArrayNumber(), add_hit->GetEnergy());
-										addDopp_exc_PIDG->Fill(add_hit->GetDoppler(particle_beta, &recoil_vec), exc);
-									}
-	                          
-								}else if (BGtofGate((s3hit->GetTime() - em_hit->GetTime()))){ // TOF gate
-									excE_bg->Fill(exc);
-									excE_theta_bg->Fill(s3hit->GetTheta() * r2d, exc);
-									addDopp_bg->Fill(add_hit->GetDoppler(particle_beta, &recoil_vec));
-									addDopp_ANum_bg->Fill(add_hit->GetArrayNumber(), add_hit->GetEnergy());
-									addDopp_exc_bg->Fill(add_hit->GetDoppler(particle_beta, &recoil_vec), exc);
-								}
+			                    }
 							}
-	                    }
-						}
-					}	
-				} // if S3 & tigress
-			}  // emma
-		}     //si
-		tigress->ResetAddback(); 
-    }
-}
+						}	
+					} // if S3 & tigress
+				}  // emma
+			}     //si
+			tigress->ResetAddback(); 
+		}
+	} // if emma 
       
       
-} // this is the end bracket 
+} // this is the end bracket for jentries. 
 	
 
   

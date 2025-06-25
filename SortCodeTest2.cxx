@@ -120,6 +120,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
     printf("Opening file %s failed, aborting\n", afile);
     return;
   }
+  f
 
   printf("File %s opened\n", afile);
 //  TChain *AnalysisTree = (TChain *)analysisfile->Get("AnalysisTree");

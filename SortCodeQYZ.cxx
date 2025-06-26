@@ -100,21 +100,16 @@ bool suppAdd = false;
 bool s3EnergyDiff = false; // this is for comparing s3 ring vs sector energy differences
 bool siicCut = false;      // checking if Si/ic is within the cut we loaded for it
 
-void SortCode::SortData(char const *afile, char const *calfile, char const *outfile, char const *target = "NULL")
-{
-
+void SortCode::SortData(char const *afile, char const *calfile, char const *outfile, char const *target = "NULL"){
     Initialise();
-
     TFile *analysisfile = new TFile(afile, "READ"); // Opens Analysis Trees
-    if (!analysisfile->IsOpen())
-    {
+
+    if (!analysisfile->IsOpen()){
         printf("Opening file %s failed, aborting\n", afile);
         return;
     }
     
-
     printf("File %s opened\n", afile);
-    //  TChain *AnalysisTree = (TChain *)analysisfile->Get("AnalysisTree");
     TChain *AnalysisTree = new TChain("AnalysisTree");
     AnalysisTree->Add(afile);
     long analentries = AnalysisTree->GetEntries();
@@ -206,58 +201,47 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
             cout << setiosflags(ios::fixed) << "Entry " << jentry << " of " << analentries << ", " << 100 * jentry / analentries << "% complete" << "\r" << flush;
 
         AnalysisTree->GetEntry(jentry);
+        
 
         // reset the exc energy
         exc = -1; // that way we don't accidentally fill things with the previous exc energy
         reac->SetExcEnergy(0);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         
-    }
+        // S3 Raw Energy
+        if (s3){
+            for (int i; i < s3->GetPixelMultiplicity(); i++){
+                s3hit = s3->GetPixelHit(i);
+                s3E->Fill(s3hit->GetEnergy());
+            }
+        }
+
+
+    } // end of jentries loop 
+    printf("\nEnd of main event loops");
+    cout << "Entry " << analentries << " of " << analentries << " , 100% complete" << endl;fflush(stdout);
+    cout << "Event sorting complete, WOHOO!" << endl; 
+    std::cout	<< analentries << " events, " << tig_emma_counter << " containing TIGRESS + EMMA, " << tig_counter << " containing TIGRESS, " << emma_counter << " containing EMMA"
+						<< std::endl;
+
+    cout << "Writing histograms to " << outfile << endl;fflush(stdout);
+
+    // Organize Histograms
+    TFile *myfile = new TFile(outfile, "RECREATE");
+    myfile->cd();
+
+    // S3
+    TDirectory s3Dir = new TDirectory("S3");
+    s3Dir->cd(); 
+    s3List->Write(); 
+    myfile->cd(); 
+
+
+
+
+    // Write out the Histogram file
+    myfile->Write();
+    myfile->Close(); 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

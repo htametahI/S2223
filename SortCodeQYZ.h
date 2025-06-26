@@ -27,15 +27,15 @@
 #include "TEnv.h"
 using namespace std;
 
-TList *tigList, *emmaList, *s3List, *PIDList
+TList *tigList, *emmaList, *s3List, *PIDList;
 
 // TIGRESS 
-TH1F *tigE, *tigAddE, *tigAddDoppE
+TH1F *tigE, *tigAddE, *tigAddDoppE;
 
 // EMMA
-TH1F *emmaXpos *emmaYpos *emmaICSum, *emmaICE[5], *emmaSSBE[2], emmaSiE
-TH2F *emmadEE, *emmaTigdt, *emmaPgac, *emmaICN, *emmaIC0V1, *emmaIC0V2, *emmaIC0V3, *emmaIC1V2*, *emmaIC1V3, *emmaIC2V3
-TH2F *emmadtE, *emmaICSumVSi, *emmaICSumVSiPlusIC, *emmaIC0VSi, *emmaIC1VSi, *emmaIC2VSi, *emmaIC3VSi
+TH1F *emmaXpos *emmaYpos *emmaICSum, *emmaICE[5], *emmaSSBE[2], emmaSiE;
+TH2F *emmadEE, *emmaTigdt, *emmaPgac, *emmaICN, *emmaIC0V1, *emmaIC0V2, *emmaIC0V3, *emmaIC1V2*, *emmaIC1V3, *emmaIC2V3;
+TH2F *emmadtE, *emmaICSumVSi, *emmaICSumVSiPlusIC, *emmaIC0VSi, *emmaIC1VSi, *emmaIC2VSi, *emmaIC3VSi;
 
 // S3
 TH1F *s3E, *s3RingsSectorsSinglesT, *s3RingCounts, *s3SecCounts, *s3Rate;
@@ -113,6 +113,7 @@ void SortCode::Initialise() {
 	s3RingsSectorsSinglesT = new TH1F("s3RingsSectorsSinglesT","S3 sectorT vs ringT Multiplicity 1;Sector Time - Ring Time",2048,-1024,1024);
 	s3RingsSectorsSinglesT->Add(s3RingsSectorsSinglesT); 
 	
+<<<<<<< HEAD
 	// TOF
 	TH1F *s3EmmaTof, *ssbICTof, *ssbSiTof, *tigICTof, *tigAnodeTof;
 	s3EmmaTof = new TH1F("s3EmmaTof", "S3 EMMA TOF; S3 EMMA Time Difference(ns);", 20000, -10000, 10000);
@@ -127,7 +128,11 @@ void SortCode::Initialise() {
 	tofList->Add(tigAnodeTof);
 	 
 
+=======
 	
+>>>>>>> 7e8fe8d (fixed header file)
+
+
 	
 	
   	

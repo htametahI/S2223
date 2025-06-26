@@ -230,10 +230,17 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
     myfile->cd();
 
     // S3
-    TDirectory s3Dir = myfile->mkdir("S3");
+    TDirectory *s3Dir = myfile->mkdir("S3");
     s3Dir->cd(); 
     s3List->Write(); 
     myfile->cd(); 
+
+    // TIGRESS
+    TDirectory *tigDir = myfile->mkdir("TIGRESS");
+    tigDir->cd(); 
+    tigList->Write(); 
+    myfile->cd(); 
+    
 
 
 

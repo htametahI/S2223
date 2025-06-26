@@ -27,7 +27,7 @@
 #include "TEnv.h"
 using namespace std;
 
-TList *tigList, *emmaList, *s3List, *PIDList; *tofList; 
+TList *tigList, *emmaList, *s3List, *PIDList, *tofList; 
 
 // TIGRESS 
 TH1F *tigE, *tigAddE, *tigAddDoppE;
@@ -80,7 +80,7 @@ void SortCode::Initialise() {
   	// EMMA 
 	emmaXpos = new TH1F("EMMAPgacXPosition", "PGAC X Position;X Position (mm);Counts", 160, -80, 80);
 	emmaList->Add(emmaXpos);
-	emmaYPos = new TH1F("EMMAPgacYPosition", "PGAC Y Position;Y Position (mm);Counts", 60, -30, 30);
+	emmaYpos = new TH1F("EMMAPgacYPosition", "PGAC Y Position;Y Position (mm);Counts", 60, -30, 30);
 	emmaList->Add(emmaYpos);
 	emmaPgac = new TH2F("EMMAPgac", "PGAC Hit Pattern", 160, -80, 80, 60, -30, 30);
 	emmaList->Add(emmaPgac);

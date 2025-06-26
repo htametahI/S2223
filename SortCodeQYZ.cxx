@@ -45,7 +45,7 @@ bool loadCutG(char const *cutfile)
 { // 2D Gate Loader. Code only uses mass gate if cut file given
     TFile *cuts = new TFile(cutfile, "READ");
     // massGate = (TCutG * ) cuts->Get("mass");
-    siicGate = (TCutG *)cuts->Get("siIC");
+    //siicGate = (TCutG *)cuts->Get("siIC");
     return true;
 }
 
@@ -230,7 +230,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
     myfile->cd();
 
     // S3
-    TDirectory s3Dir = new TDirectory("S3");
+    TDirectory s3Dir = myfile->mkdir("S3");
     s3Dir->cd(); 
     s3List->Write(); 
     myfile->cd(); 

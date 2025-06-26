@@ -209,7 +209,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
         
         // S3 Raw Energy
 
-         for (int i; i < s3->GetPixelMultiplicity(); i++){
+         for (int i = 0; i < s3->GetPixelMultiplicity(); i++){
             s3hit = s3->GetPixelHit(i);
             s3E->Fill(s3hit->GetEnergy());
         }

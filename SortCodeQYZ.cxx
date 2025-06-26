@@ -208,12 +208,12 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
         reac->SetExcEnergy(0);
         
         // S3 Raw Energy
-        if (s3){
-            for (int i; i < s3->GetPixelMultiplicity(); i++){
-                s3hit = s3->GetPixelHit(i);
-                s3E->Fill(s3hit->GetEnergy());
-            }
+
+         for (int i; i < s3->GetPixelMultiplicity(); i++){
+            s3hit = s3->GetPixelHit(i);
+            s3E->Fill(s3hit->GetEnergy());
         }
+        
 
 
     } // end of jentries loop 

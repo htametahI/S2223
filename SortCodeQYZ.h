@@ -33,7 +33,7 @@ TList *tigList, *emmaList, *s3List, *PIDList, *tofList;
 TH1F *tigE, *tigAddE, *tigAddDoppE;
 
 // EMMA
-TH1F *emmaXpos, *emmaYpos, *emmaICSum, *emmaICE[5], *emmaSSBE[2], emmaSiE;
+TH1F *emmaXpos, *emmaYpos, *emmaICSum, *emmaICE[5], *emmaSSBE[2], *emmaSiE;
 TH2F *emmadEE, *emmaTigdt, *emmaPgac, *emmaICN, *emmaIC0V1, *emmaIC0V2, *emmaIC0V3, *emmaIC1V2, *emmaIC1V3, *emmaIC2V3;
 TH2F *emmadtE, *emmaICSumVSi, *emmaICSumVSiPlusIC, *emmaIC0VSi, *emmaIC1VSi, *emmaIC2VSi, *emmaIC3VSi;
 

@@ -213,6 +213,17 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
             s3hit = s3->GetPixelHit(i);
             s3E->Fill(s3hit->GetEnergy());
         }
+
+        // EMMA gatede PGAC
+        for (int i = 0; i < emma->GetMultiplicity(); i++){
+            em_hit = emma->GetEmmaHit(i);
+            for (j = 0; j < s3->GetPixelMiltoplicity(); j++){
+                s3hit = s3->GetPixelHit(j);
+                if (s3hit->GetTime() - em_hit->GetTime() > 350 && s3hit->GetTime() - em_hit->GetTime() < 530) {
+                    emmaPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y()); 
+                }
+            }
+        }
         
 
 
@@ -239,6 +250,12 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
     TDirectory *tigDir = myfile->mkdir("TIGRESS");
     tigDir->cd(); 
     tigList->Write(); 
+    myfile->cd(); 
+
+    // EMMA
+    TDirectory *emmaDir = myfile->mkdir("EMMA");
+    emmaDir->cd(); 
+    emmaList->Write(); 
     myfile->cd(); 
     
 

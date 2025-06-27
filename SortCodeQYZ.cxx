@@ -183,15 +183,16 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
          << "particle_beta: " << particle_betaDoppler << endl;
 
     std::cout << "\nLoading cuts now";
-    TFile *cutFile = new TFile("PID_Cuts.root");
+    TFile *cutFile = new TFile("26MgCut.root");
+    //TFile *cutFile = new TFile("PID_Cuts.root");
 
-    TCutG *F19_cut = (TCutG *)cutFile->Get("F19_cut");
-    TCutG *Na24_cut = (TCutG *)cutFile->Get("Ne22_cut"); // the cut itself is called "Ne22" but it is actually 24Na.
-    TCutG *Mg26_cut = (TCutG *)cutFile->Get("Mg26_cut");
-    TCutG *Al26_cut = (TCutG *)cutFile->Get("Al26_cut");
+    // TCutG *F19_cut = (TCutG *)cutFile->Get("F19_cut");
+    // TCutG *Na24_cut = (TCutG *)cutFile->Get("Ne22_cut"); // the cut itself is called "Ne22" but it is actually 24Na.
+    // TCutG *Mg26_cut = (TCutG *)cutFile->Get("Mg26_cut");
+    // TCutG *Al26_cut = (TCutG *)cutFile->Get("Al26_cut");
 
     // TFile *cutFile = new TFile("26MgCut.root");
-    // TCutG *Mg26_cut = (TCutG*)cutFile->Get("CUTG");
+    TCutG *Mg26_cut = (TCutG*)cutFile->Get("CUTG");
 
     printf("\nSorting analysis events...\n");
     for (int jentry = 0; jentry < analentries; jentry++)
@@ -219,7 +220,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
             em_hit = emma->GetEmmaHit(i);
             for (int j = 0; j < s3->GetPixelMultiplicity(); j++){
                 s3hit = s3->GetPixelHit(j);
-                if (s3hit->GetTime() - em_hit->GetTime() > 350 && s3hit->GetTime() - em_hit->GetTime() < 530) {
+                if (s3hit->GetTime() - em_hit->GetTime() > 350 && s3hit->GetTime() - em_hit->GetTime() < 530 && mgate2D(em_hit, Mg26_cut)) {
                     emmaPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y()); 
                 }
             }

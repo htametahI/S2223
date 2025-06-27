@@ -220,7 +220,8 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
             em_hit = emma->GetEmmaHit(i);
             for (int j = 0; j < s3->GetPixelMultiplicity(); j++){
                 s3hit = s3->GetPixelHit(j);
-                if (s3hit->GetTime() - em_hit->GetTime() > 350 && s3hit->GetTime() - em_hit->GetTime() < 530 && mgate2D(em_hit, Mg26_cut)) {
+                // if (s3hit->GetTime() - em_hit->GetTime() > 350 && s3hit->GetTime() - em_hit->GetTime() < 530 && mgate2D(em_hit, Mg26_cut)) {
+                if (mgate2D(em_hit, Mg26_cut)) {
                     emmaPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y()); 
                 }
             }

@@ -160,8 +160,8 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
 
     if (s3)
     {
-        // s3->SetFrontBackTime(140); // Needed to build S3 pixels properly
-        s3->SetFrontBackTime(1000);
+        s3->SetFrontBackTime(140); // Needed to build S3 pixels properly
+        //s3->SetFrontBackTime(1000);
         s3->SetFrontBackEnergy(0.9);
     }
 

@@ -45,7 +45,7 @@ bool loadCutG(char const *cutfile)
 { // 2D Gate Loader. Code only uses mass gate if cut file given
     TFile *cuts = new TFile(cutfile, "READ");
     // massGate = (TCutG * ) cuts->Get("mass");
-    //siicGate = (TCutG *)cuts->Get("siIC");
+    // siicGate = (TCutG *)cuts->Get("siIC");
     return true;
 }
 
@@ -100,15 +100,17 @@ bool suppAdd = false;
 bool s3EnergyDiff = false; // this is for comparing s3 ring vs sector energy differences
 bool siicCut = false;      // checking if Si/ic is within the cut we loaded for it
 
-void SortCode::SortData(char const *afile, char const *calfile, char const *outfile, char const *target = "NULL"){
+void SortCode::SortData(char const *afile, char const *calfile, char const *outfile, char const *target = "NULL")
+{
     Initialise();
     TFile *analysisfile = new TFile(afile, "READ"); // Opens Analysis Trees
 
-    if (!analysisfile->IsOpen()){
+    if (!analysisfile->IsOpen())
+    {
         printf("Opening file %s failed, aborting\n", afile);
         return;
     }
-    
+
     printf("File %s opened\n", afile);
     TChain *AnalysisTree = new TChain("AnalysisTree");
     AnalysisTree->Add(afile);
@@ -161,7 +163,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
     if (s3)
     {
         s3->SetFrontBackTime(140); // Needed to build S3 pixels properly
-        //s3->SetFrontBackTime(1000);
+        // s3->SetFrontBackTime(1000);
         s3->SetFrontBackEnergy(0.9);
     }
 
@@ -183,7 +185,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
          << "particle_beta: " << particle_betaDoppler << endl;
 
     std::cout << "\nLoading cuts now";
-    //TFile *cutFile = new TFile("26MgCut.root");
+    // TFile *cutFile = new TFile("26MgCut.root");
     TFile *cutFile = new TFile("PID_Cuts.root");
 
     TCutG *F19_cut = (TCutG *)cutFile->Get("F19_cut");
@@ -192,7 +194,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
     TCutG *Al26_cut = (TCutG *)cutFile->Get("Al26_cut");
 
     // TFile *cutFile = new TFile("26MgCut.root");
-    //TCutG *Mg26_cut = (TCutG*)cutFile->Get("CUTG");
+    // TCutG *Mg26_cut = (TCutG*)cutFile->Get("CUTG");
 
     printf("\nSorting analysis events...\n");
     for (int jentry = 0; jentry < analentries; jentry++)
@@ -202,41 +204,49 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
             cout << setiosflags(ios::fixed) << "Entry " << jentry << " of " << analentries << ", " << 100 * jentry / analentries << "% complete" << "\r" << flush;
 
         AnalysisTree->GetEntry(jentry);
-        
 
         // reset the exc energy
         exc = -1; // that way we don't accidentally fill things with the previous exc energy
         reac->SetExcEnergy(0);
-        
+
         // S3 Raw Energy
 
-         for (int i = 0; i < s3->GetPixelMultiplicity(); i++){
+        for (int i = 0; i < s3->GetPixelMultiplicity(); i++)
+        {
             s3hit = s3->GetPixelHit(i);
             s3E->Fill(s3hit->GetEnergy());
         }
 
         // EMMA gatede PGAC
-        for (int i = 0; i < emma->GetMultiplicity(); i++){
-            em_hit = emma->GetEmmaHit(i);
-            for (int j = 0; j < s3->GetPixelMultiplicity(); j++){
-                s3hit = s3->GetPixelHit(j);
-                // if (s3hit->GetTime() - em_hit->GetTime() > 350 && s3hit->GetTime() - em_hit->GetTime() < 530 && mgate2D(em_hit, Mg26_cut)) {
-                if (mgate2D(em_hit, Mg26_cut)) {
-                    emmaPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y()); 
+        if (emma)
+        {
+            for (int i = 0; i < emma->GetMultiplicity(); i++)
+            {
+                em_hit = emma->GetEmmaHit(i);
+                for (int j = 0; j < s3->GetPixelMultiplicity(); j++)
+                {
+                    s3hit = s3->GetPixelHit(j);
+                    emmaPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y()); // Raw pgac 
+                    if (s3hit->GetTime() - em_hit->GetTime() > 350 && s3hit->GetTime() - em_hit->GetTime() < 530) {
+                    {
+                        emmaS3TimeGatedPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y()); // time gated pgac 
+                    }
                 }
             }
+
+
         }
-        
 
-
-    } // end of jentries loop 
+    } // end of jentries loop
     printf("\nEnd of main event loops");
-    cout << "Entry " << analentries << " of " << analentries << " , 100% complete" << endl;fflush(stdout);
-    cout << "Event sorting complete, WOHOO!" << endl; 
-    std::cout	<< analentries << " events, " << tig_emma_counter << " containing TIGRESS + EMMA, " << tig_counter << " containing TIGRESS, " << emma_counter << " containing EMMA"
-						<< std::endl;
+    cout << "Entry " << analentries << " of " << analentries << " , 100% complete" << endl;
+    fflush(stdout);
+    cout << "Event sorting complete, WOHOO!" << endl;
+    std::cout << analentries << " events, " << tig_emma_counter << " containing TIGRESS + EMMA, " << tig_counter << " containing TIGRESS, " << emma_counter << " containing EMMA"
+              << std::endl;
 
-    cout << "Writing histograms to " << outfile << endl;fflush(stdout);
+    cout << "Writing histograms to " << outfile << endl;
+    fflush(stdout);
 
     // Organize Histograms
     TFile *myfile = new TFile(outfile, "RECREATE");
@@ -244,33 +254,26 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
 
     // S3
     TDirectory *s3Dir = myfile->mkdir("S3");
-    s3Dir->cd(); 
-    s3List->Write(); 
-    myfile->cd(); 
+    s3Dir->cd();
+    s3List->Write();
+    myfile->cd();
 
     // TIGRESS
     TDirectory *tigDir = myfile->mkdir("TIGRESS");
-    tigDir->cd(); 
-    tigList->Write(); 
-    myfile->cd(); 
+    tigDir->cd();
+    tigList->Write();
+    myfile->cd();
 
     // EMMA
     TDirectory *emmaDir = myfile->mkdir("EMMA");
-    emmaDir->cd(); 
-    emmaList->Write(); 
-    myfile->cd(); 
-    
-
-
-
+    emmaDir->cd();
+    emmaList->Write();
+    myfile->cd();
 
     // Write out the Histogram file
     myfile->Write();
-    myfile->Close(); 
+    myfile->Close();
 }
-
-
-
 
 // main function here
 int main(int argc, char **argv)

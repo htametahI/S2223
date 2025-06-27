@@ -34,8 +34,9 @@ TH1F *tigE, *tigAddE, *tigAddDoppE;
 
 // EMMA
 TH1F *emmaXpos, *emmaYpos, *emmaICSum, *emmaICE[5], *emmaSSBE[2], *emmaSiE; 
-TH2F *emmadEE, *emmaTigdt, *emmaPgac, *emmaICN, *emmaIC0V1, *emmaIC0V2, *emmaIC0V3, *emmaIC1V2, *emmaIC1V3, *emmaIC2V3;
+TH2F *emmadEE, *emmaTigdt, *emmaICN, *emmaIC0V1, *emmaIC0V2, *emmaIC0V3, *emmaIC1V2, *emmaIC1V3, *emmaIC2V3;
 TH2F *emmadtE, *emmaICSumVSi, *emmaICSumVSiPlusIC, *emmaIC0VSi, *emmaIC1VSi, *emmaIC2VSi, *emmaIC3VSi;
+TH2F *emmaPgac, *emmaS3TimeGatedPgac, *emmaPIDGatedPgac;
 
 // S3
 TH1F *s3E, *s3RingsSectorsSinglesT, *s3RingCounts, *s3SecCounts, *s3Rate;
@@ -84,6 +85,10 @@ void SortCode::Initialise() {
 	emmaList->Add(emmaYpos);
 	emmaPgac = new TH2F("EMMAPgac", "PGAC Hit Pattern", 160, -80, 80, 60, -30, 30);
 	emmaList->Add(emmaPgac);
+	emmaS3TimeGatedPgac = new TH2F("emmaS3TimeGatedPgac", "PGAC Time Gated Hit Pattern", 160, -80, 80, 60, -30, 30);
+	emmaList->Add(emmaS3TimeGatedPgac);
+	emmaPIDGatedPgac = new TH2F("emmaPIDGatedPgac", "PGAC PID Gated Hit Pattern", 160, -80, 80, 60, -30, 30);
+	emmaList->Add(emmaPIDGatedPgac);
 	
 	emmaSiE = new TH1F("EMMASiE", "EMMA Focal Plane Silicon Energy;Energy (keV);Counts", 16384, 0, 16384);
   	emmaList->Add(emmaSiE);

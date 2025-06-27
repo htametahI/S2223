@@ -45,7 +45,7 @@ bool loadCutG(char const *cutfile)
 { // 2D Gate Loader. Code only uses mass gate if cut file given
     TFile *cuts = new TFile(cutfile, "READ");
     // massGate = (TCutG * ) cuts->Get("mass");
-    //siicGate = (TCutG *)cuts->Get("siIC");
+    siicGate = (TCutG *)cuts->Get("siIC");
     return true;
 }
 
@@ -108,7 +108,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
         printf("Opening file %s failed, aborting\n", afile);
         return;
     }
-    
+
     printf("File %s opened\n", afile);
     TChain *AnalysisTree = new TChain("AnalysisTree");
     AnalysisTree->Add(afile);
@@ -160,8 +160,8 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
 
     if (s3)
     {
-        // s3->SetFrontBackTime(140); // Needed to build S3 pixels properly
-        s3->SetFrontBackTime(1000);
+        s3->SetFrontBackTime(140); // Needed to build S3 pixels properly
+        //s3->SetFrontBackTime(1000);
         s3->SetFrontBackEnergy(0.9);
     }
 
@@ -208,15 +208,21 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
         reac->SetExcEnergy(0);
         
         // S3 Raw Energy
-
-         for (int i = 0; i < s3->GetPixelMultiplicity(); i++){
-            s3hit = s3->GetPixelHit(i);
-            s3E->Fill(s3hit->GetEnergy());
+        if (s3){
+            for (int i; i < s3->GetPixelMultiplicity(); i++){
+                s3hit = s3->GetPixelHit(i);
+                s3E->Fill(s3hit->GetEnergy());
+            }
         }
-        
+
+        // EMMA
+
+
 
 
     } // end of jentries loop 
+
+
     printf("\nEnd of main event loops");
     cout << "Entry " << analentries << " of " << analentries << " , 100% complete" << endl;fflush(stdout);
     cout << "Event sorting complete, WOHOO!" << endl; 
@@ -230,17 +236,10 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
     myfile->cd();
 
     // S3
-    TDirectory *s3Dir = myfile->mkdir("S3");
+    TDirectory s3Dir = new TDirectory("S3");
     s3Dir->cd(); 
     s3List->Write(); 
     myfile->cd(); 
-
-    // TIGRESS
-    TDirectory *tigDir = myfile->mkdir("TIGRESS");
-    tigDir->cd(); 
-    tigList->Write(); 
-    myfile->cd(); 
-    
 
 
 

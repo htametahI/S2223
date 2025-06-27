@@ -27,15 +27,15 @@
 #include "TEnv.h"
 using namespace std;
 
-TList *tigList, *emmaList, *s3List, *PIDList, *tofList; 
+TList *tigList, *emmaList, *s3List, *PIDList
 
 // TIGRESS 
-TH1F *tigE, *tigAddE, *tigAddDoppE;
+TH1F *tigE, *tigAddE, *tigAddDoppE
 
 // EMMA
-TH1F *emmaXpos, *emmaYpos, *emmaICSum, *emmaICE[5], *emmaSSBE[2], *emmaSiE;
-TH2F *emmadEE, *emmaTigdt, *emmaPgac, *emmaICN, *emmaIC0V1, *emmaIC0V2, *emmaIC0V3, *emmaIC1V2, *emmaIC1V3, *emmaIC2V3;
-TH2F *emmadtE, *emmaICSumVSi, *emmaICSumVSiPlusIC, *emmaIC0VSi, *emmaIC1VSi, *emmaIC2VSi, *emmaIC3VSi;
+TH1F *emmaXpos *emmaYpos *emmaICSum, *emmaICE[5], *emmaSSBE[2], emmaSiE
+TH2F *emmadEE, *emmaTigdt, *emmaPgac, *emmaICN, *emmaIC0V1, *emmaIC0V2, *emmaIC0V3, *emmaIC1V2*, *emmaIC1V3, *emmaIC2V3
+TH2F *emmadtE, *emmaICSumVSi, *emmaICSumVSiPlusIC, *emmaIC0VSi, *emmaIC1VSi, *emmaIC2VSi, *emmaIC3VSi
 
 // S3
 TH1F *s3E, *s3RingsSectorsSinglesT, *s3RingCounts, *s3SecCounts, *s3Rate;
@@ -47,13 +47,14 @@ TH1F *s3EmmaTof, *ssbICTof, *ssbSiTof, *tigICTof, *tigAnodeTof;
 // PID
 
 // Cuts 
-TCutG *Ne24Cut, *Mg26Cut, *Al26Cut, *Na22Cut; 
+TCutG *24NeCut, *26MgCut, *26AlCut, *22NaCut; 
 
 class SortCode {
 	public :
 		SortCode(){;} 
 		void SortData(const char*, const char*, const char*, const char*);
 		void Initialise();
+		
 };
 #endif
 
@@ -80,7 +81,7 @@ void SortCode::Initialise() {
   	// EMMA 
 	emmaXpos = new TH1F("EMMAPgacXPosition", "PGAC X Position;X Position (mm);Counts", 160, -80, 80);
 	emmaList->Add(emmaXpos);
-	emmaYpos = new TH1F("EMMAPgacYPosition", "PGAC Y Position;Y Position (mm);Counts", 60, -30, 30);
+	emmaYPos = new TH1F("EMMAPgacYPosition", "PGAC Y Position;Y Position (mm);Counts", 60, -30, 30);
 	emmaList->Add(emmaYpos);
 	emmaPgac = new TH2F("EMMAPgac", "PGAC Hit Pattern", 160, -80, 80, 60, -30, 30);
 	emmaList->Add(emmaPgac);
@@ -127,6 +128,7 @@ void SortCode::Initialise() {
 	tofList->Add(tigAnodeTof);
 	 
 
+	
 	
 	
   	

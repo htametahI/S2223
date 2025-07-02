@@ -27,7 +27,7 @@
 #include "TEnv.h"
 using namespace std;
 
-TList *tigList, *emmaList, *s3List, *PIDList, *tofList;
+TList *tigList, *emmaList, *s3List, *PIDList, *tofList, *icList;
 
 // TIGRESS
 TH1F *tigE, *tigAddE, *tigAddDoppE;

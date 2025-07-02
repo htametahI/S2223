@@ -55,7 +55,7 @@ bool goodIC(double tempIC[])
     //  double gatemax[4] = {3200, 3200, 3200, 3200}; // IC Segment Maximum energy gates. Change !!!
     // double gatemin[4] = {400, 440, 440, 420}; // gh
     // double gatemax[4] = {550, 580, 600, 580}; // gh ... for 21Ne recoils in S1873
-    
+
     double gatemin[4] = {550, 600, 620, 600}; // S2223
     double gatemax[4] = {670, 720, 750, 710};
     bool good = true;
@@ -284,6 +284,8 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
     emmaDir->cd();
     emmaList->Write();
     myfile->cd();
+
+    
 
     // Write out the Histogram file
     myfile->Write();

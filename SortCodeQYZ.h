@@ -38,6 +38,10 @@ TH2F *emmadEE, *emmaTigdt, *emmaICN, *emmaIC0V1, *emmaIC0V2, *emmaIC0V3, *emmaIC
 TH2F *emmadtE, *emmaICSumVSi, *emmaICSumVSiPlusIC, *emmaIC0VSi, *emmaIC1VSi, *emmaIC2VSi, *emmaIC3VSi;
 TH2F *emmaPgac, *emmaS3TimeGatedPgac, *emmaPIDGatedPgac;
 
+// IC
+TH1F *emmaICSegmentEnergy[5];
+TH2F *emmaICSegment;  
+
 // S3
 TH1F *s3E, *s3RingsSectorsSinglesT, *s3RingCounts, *s3SecCounts, *s3Rate;
 TH2F *s3Rings, *s3Sectors, *s3RingsT, *s3SectorsT, *siETheta, *s3Hitmap, *s3RingsSectors;
@@ -47,9 +51,7 @@ TH1F *s3EmmaTof, *ssbICTof, *ssbSiTof, *tigICTof, *tigAnodeTof;
 
 // PID
 
-// IC
-TH1F *emmaICSegmentEnergy[5];
-TH2F *emmaICSegment;  
+
 
 // Cuts
 TCutG *Ne24Cut, *Mg26Cut, *Al26Cut, *Na22Cut;

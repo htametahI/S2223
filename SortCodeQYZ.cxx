@@ -278,6 +278,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                              addDopp26MgPID->Fill(add_hit->GetDoppler(particle_betaDoppler)); 
                            } 
                         }
+                        tigress->ResetAddback();
                     }
                 }
             }

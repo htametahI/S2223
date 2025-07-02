@@ -50,7 +50,7 @@ TH2F *s3Rings, *s3Sectors, *s3RingsT, *s3SectorsT, *siETheta, *s3Hitmap, *s3Ring
 TH1F *s3EmmaTof, *ssbICTof, *ssbSiTof, *tigICTof, *tigAnodeTof;
 
 // PID
-
+TH2F *pgac26MgPID; 
 
 
 // Cuts
@@ -92,7 +92,7 @@ void SortCode::Initialise()
 	emmaList->Add(emmaYpos);
 	emmaPgac = new TH2F("EMMAPgac", "PGAC Hit Pattern", 160, -80, 80, 60, -30, 30);
 	emmaList->Add(emmaPgac);
-	emmaS3TimeGatedPgac = new TH2F("emmaS3TimeGatedPgac", "PGAC Time Gated Hit Pattern", 160, -80, 80, 60, -30, 30);
+	emmaS3TimeGatedPgac = new TH2F("emmaS3TimeGatedPgac", "PGAC Time Gated Hit Pattern", 160, -80, 80, 120, -60, 60);
 	emmaList->Add(emmaS3TimeGatedPgac);
 	emmaPIDGatedPgac = new TH2F("emmaPIDGatedPgac", "PGAC PID Gated Hit Pattern", 160, -80, 80, 60, -30, 30);
 	emmaList->Add(emmaPIDGatedPgac);
@@ -149,4 +149,8 @@ void SortCode::Initialise()
 
 	emmaICSegment = new TH2F("EMMA IC Segments", "IC Energy vs Counts; IC Segment; Counts", 5, 0, 5, 4096, 0, 4096); 
 	emmaList->Add(emmaICSegment); 
+
+	// PID 
+	pgac26MgPID = new TH2F ("Mg-26 PID Gated Pgac, Mg-26 PID Gated Pgac; X Position (mm); Y Position(mm)", 160, -80, 80, 120, -60, 60); 
+	PIDList->Add(pgac26MgPID);
 }

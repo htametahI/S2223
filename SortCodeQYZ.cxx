@@ -191,13 +191,13 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
     // TFile *cutFile = new TFile("26MgCut.root");
     TFile *cutFile = new TFile("PID_Cuts.root");
 
-    TCutG *F19_cut = (TCutG *)cutFile->Get("F19_cut");
-    TCutG *Na24_cut = (TCutG *)cutFile->Get("Ne22_cut"); // the cut itself is called "Ne22" but it is actually 24Na.
-    TCutG *Mg26_cut = (TCutG *)cutFile->Get("Mg26_cut");
-    TCutG *Al26_cut = (TCutG *)cutFile->Get("Al26_cut");
+    // TCutG *F19_cut = (TCutG *)cutFile->Get("F19_cut");
+    // TCutG *Na24_cut = (TCutG *)cutFile->Get("Ne22_cut"); // the cut itself is called "Ne22" but it is actually 24Na.
+    // TCutG *Mg26_cut = (TCutG *)cutFile->Get("Mg26_cut");
+    // TCutG *Al26_cut = (TCutG *)cutFile->Get("Al26_cut");
 
-    // TFile *cutFile = new TFile("26MgCut.root");
-    // TCutG *Mg26_cut = (TCutG*)cutFile->Get("CUTG");
+    TFile *cutFile = new TFile("26MgCut.root");
+    TCutG *Mg26_cut = (TCutG*)cutFile->Get("CUTG");
 
     printf("\nSorting analysis events...\n");
     for (int jentry = 0; jentry < analentries; jentry++)
@@ -223,13 +223,15 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
         
         if (emma)
         {   
-            tempIC = 0; // initialize IC energy accumulator 
+            tempIC = 0; // initialize IC energy accumulator, this is the total energy loss of particle in all the ICs 
 
             // ========================================= EMMA-S3 =========================================
             for (int i = 0; i < emma->GetMultiplicity(); i++)
             {
                 em_hit = emma->GetEmmaHit(i);
-                emmaPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y()); // Raw pgac
+                emmaPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y()); // Raw 2D pgac
+                xPos->Fill(em_hit->GetPosition().X());   // Pgac x position 
+                yPos->Fill(em_hit->GetPosition().Y());   // pgac y position 
                 for (int j = 0; j < s3->GetPixelMultiplicity(); j++)
                 {
                     s3hit = s3->GetPixelHit(j);
@@ -255,9 +257,21 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                 si_hit = emma->GetSiHit(j);
                 emmaICSumVSi->Fill(si_hit->GetEnergy(), tempIC); 
                 emmaICSumVSiPlusIC->Fill(si_hit->GetEnergy() + tempIC, tempIC);
+            }
 
-                // PID gated PGAC
-                
+            // PID gated PGAC: 
+            for (int k = 0; k < emma->GetMultiplicity(), k++)
+            {
+                em_hit = emma->GetEmmaHit(k);
+                for (int m = 0; m < emma->GetSiMultiplicity(); m++)
+                {
+                    si_hit = emma->GetSiHit(m); 
+                    if (Mg26_Cut->IsInside(si_hit->GetEnergy(), tempIC))
+                    {
+                        pgac26MgPID->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y());
+                    }
+                }
+
             }
             
         }
@@ -293,6 +307,13 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
     emmaDir->cd();
     emmaList->Write();
     myfile->cd();
+
+    // PID 
+    TDirectory *pidDir = myfile->mkdir("PID");
+    pidDir->cd();
+    PIDList->Write();
+    myfile->cd();
+
 
     
 

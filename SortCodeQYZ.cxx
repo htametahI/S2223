@@ -252,14 +252,12 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
             }
 
             // IC and Si: 
-            for (int j = 0; j < emma->GetICMultiplicity(); j++)
+            for (int j = 0; j < emma->GetSiMultiplicity(); j++)
             {
                 si_hit = emma->GetSiHit(j);
                 emmaICSumVSi->Fill(si_hit->GetEnergy(), tempIC); 
                 emmaICSumVSiPlusIC->Fill(si_hit->GetEnergy() + tempIC, tempIC);
             }
-
-
             // ========================================= END OF IC ======================================
         }
     } // end of jentries loop

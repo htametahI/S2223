@@ -189,7 +189,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
 
     std::cout << "\nLoading cuts now";
     // TFile *cutFile = new TFile("26MgCut.root");
-    TFile *cutFile = new TFile("PID_Cuts.root");
+    //TFile *cutFile = new TFile("PID_Cuts.root");
 
     // TCutG *F19_cut = (TCutG *)cutFile->Get("F19_cut");
     // TCutG *Na24_cut = (TCutG *)cutFile->Get("Ne22_cut"); // the cut itself is called "Ne22" but it is actually 24Na.

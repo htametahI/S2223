@@ -151,6 +151,6 @@ void SortCode::Initialise()
 	emmaList->Add(emmaICSegment); 
 
 	// PID 
-	pgac26MgPID = new TH2F ("Mg-26 PID Gated Pgac, Mg-26 PID Gated Pgac; X Position (mm); Y Position(mm)", 160, -80, 80, 120, -60, 60); 
+	pgac26MgPID = new TH2F("Mg-26 PID Gated Pgac, Mg-26 PID Gated Pgac; X Position (mm); Y Position(mm)", 160, -80, 80, 120, -60, 60); 
 	PIDList->Add(pgac26MgPID);
 }

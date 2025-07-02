@@ -219,63 +219,73 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
 
         // EMMA gatede PGAC
         if (emma)
-        {
+        {   
+            tempIC = 0; // initialize IC energy accumulator 
+
+            // ========================================= EMMA-S3 =========================================
             for (int i = 0; i < emma->GetMultiplicity(); i++)
             {
                 em_hit = emma->GetEmmaHit(i);
+                emmaPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y()); // Raw pgac
                 for (int j = 0; j < s3->GetPixelMultiplicity(); j++)
                 {
                     s3hit = s3->GetPixelHit(j);
-                    emmaPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y()); // Raw pgac
                     if (s3hit->GetTime() - em_hit->GetTime() > 350 && s3hit->GetTime() - em_hit->GetTime() < 530)
                     {
-                        
-                            emmaS3TimeGatedPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y()); // time gated pgac
-                        
+                        emmaS3TimeGatedPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y()); // time gated pgac
                     }
                 }
             }
+
+            // ========================================= END OF EMMA-S3 ====================================
+
+            // ========================================= IC ============================================
+            for (int i = 0; i < emma->GetMultiplicity(); i++)
+            {
+                ic_hit = emma->GetICHit(i);
+                emmaICSegmentEnergy[ic_hit->GetSegment()]->Fill(ic_hit->GetEnergy()); 
+                emmaICSegment->Fill(ic_hit->GetSegment(), ic_hit->GetEnergy()); 
+                tempIC += ic_hit->GetEnergy(); 
+            }
+            // ========================================= END OF IC ======================================
         }
-
     } // end of jentries loop
-        printf("\nEnd of main event loops");
-        cout << "Entry " << analentries << " of " << analentries << " , 100% complete" << endl;
-        fflush(stdout);
-        cout << "Event sorting complete, WOHOO!" << endl;
-        std::cout << analentries << " events, " << tig_emma_counter << " containing TIGRESS + EMMA, " << tig_counter << " containing TIGRESS, " << emma_counter << " containing EMMA"
-                  << std::endl;
+    printf("\nEnd of main event loops");
+    cout << "Entry " << analentries << " of " << analentries << " , 100% complete" << endl;
+    fflush(stdout);
+    cout << "Event sorting complete, WOHOO!" << endl;
+    std::cout << analentries << " events, " << tig_emma_counter << " containing TIGRESS + EMMA, " << tig_counter << " containing TIGRESS, " << emma_counter << " containing EMMA"
+              << std::endl;
 
-        cout << "Writing histograms to " << outfile << endl;
-        fflush(stdout);
+    cout << "Writing histograms to " << outfile << endl;
+    fflush(stdout);
 
-        // Organize Histograms
-        TFile *myfile = new TFile(outfile, "RECREATE");
-        myfile->cd();
+    // Organize Histograms
+    TFile *myfile = new TFile(outfile, "RECREATE");
+    myfile->cd();
 
-        // S3
-        TDirectory *s3Dir = myfile->mkdir("S3");
-        s3Dir->cd();
-        s3List->Write();
-        myfile->cd();
+    // S3
+    TDirectory *s3Dir = myfile->mkdir("S3");
+    s3Dir->cd();
+    s3List->Write();
+    myfile->cd();
 
-        // TIGRESS
-        TDirectory *tigDir = myfile->mkdir("TIGRESS");
-        tigDir->cd();
-        tigList->Write();
-        myfile->cd();
+    // TIGRESS
+    TDirectory *tigDir = myfile->mkdir("TIGRESS");
+    tigDir->cd();
+    tigList->Write();
+    myfile->cd();
 
-        // EMMA
-        TDirectory *emmaDir = myfile->mkdir("EMMA");
-        emmaDir->cd();
-        emmaList->Write();
-        myfile->cd();
+    // EMMA
+    TDirectory *emmaDir = myfile->mkdir("EMMA");
+    emmaDir->cd();
+    emmaList->Write();
+    myfile->cd();
 
-        // Write out the Histogram file
-        myfile->Write();
-        myfile->Close();
-    
-} 
-// end of SortCode
+    // Write out the Histogram file
+    myfile->Write();
+    myfile->Close();
+}// end of SortCode
 
 // main function here
 int main(int argc, char **argv)
@@ -347,4 +357,4 @@ int main(int argc, char **argv)
     }
 
     return 0;
-}
+} // end of main()

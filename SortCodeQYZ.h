@@ -27,7 +27,7 @@
 #include "TEnv.h"
 using namespace std;
 
-TList *tigList, *emmaList, *s3List, *PIDList, *tofList, *icList;
+TList *tigList, *emmaList, *s3List, *PIDList, *tofList;
 
 // TIGRESS
 TH1F *tigE, *tigAddE, *tigAddDoppE;
@@ -143,9 +143,9 @@ void SortCode::Initialise()
 		emmaICSegmentEnergy[i] = new TH1F(hname, hname, 2000, 0, 2000);
 		emmaICSegmentEnergy[i]->GetXaxis()->SetTitle("IC Energy [keV]");
 		emmaICSegmentEnergy[i]->GetYaxis()->SetTitle("Counts");
-		icList->Add(emmaICSegmentEnergy[i]);
+		emmaList->Add(emmaICSegmentEnergy[i]);
 	}
 
 	emmaICSegment = new TH2F("EMMA IC Segments", "IC Energy vs Counts; IC Segment; Counts", 5, 0, 5, 4096, 0, 4096); 
-	icList->Add(emmaICSegment); 
+	emmaList->Add(emmaICSegment); 
 }

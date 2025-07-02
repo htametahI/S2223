@@ -274,7 +274,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                         {
                            for (int j = 0; j < tigress->GetAddbackMultiplicity(); j++)
                            {
-                             add_hit = tigress->GetAddbackHit();
+                             add_hit = tigress->GetAddbackHit(j);
                              addDopp26MgPID->Fill(add_hit->GetDoppler(particle_betaDoppler)); 
                            } 
                         }

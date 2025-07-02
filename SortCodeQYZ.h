@@ -50,7 +50,7 @@ TH2F *s3Rings, *s3Sectors, *s3RingsT, *s3SectorsT, *siETheta, *s3Hitmap, *s3Ring
 TH1F *s3EmmaTof, *ssbICTof, *ssbSiTof, *tigICTof, *tigAnodeTof;
 
 // PID
-TH1F *pgacXPos26MgPID; *addDopp26MgPID; 
+TH1F *pgacXPos26MgPID, *addDopp26MgPID; 
 TH2F *pgac26MgPID; 
 
 

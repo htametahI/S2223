@@ -99,11 +99,11 @@ void SortCode::Initialise()
 
 	emmaSiE = new TH1F("EMMASiE", "EMMA Focal Plane Silicon Energy;Energy (keV);Counts", 16384, 0, 16384);
 	emmaList->Add(emmaSiE);
-	emmadEE = new TH2F("emmadEE", "Si Energy VS IC SUM, EMMA;Silicon Energy (arb.);IC Sum (arb.)", 4096, 0, 4096, 16384, 0, 16384);
+	emmadEE = new TH2F("emmadEE", "Si Energy VS IC SUM, EMMA;Silicon Energy (arb.);IC Sum (keV)", 1500, 0, 1500, 6000, 0, 6000);
 	emmaList->Add(emmadEE);
-	emmaICSumVSi = new TH2F("emmaICSumVSi", "Si Energy VS IC SUM;Silicon Energy (arb.);IC Sum (arb.)", 4096, 0, 4096, 16384, 0, 16384);
+	emmaICSumVSi = new TH2F("emmaICSumVSi", "Si Energy VS IC SUM;Silicon Energy (keV);IC Sum (keV)", 4096, 0, 4096, 16384, 0, 16384);
 	emmaList->Add(emmaICSumVSi);
-	emmaICSumVSiPlusIC = new TH2F("emmaICSumVSiPlusIC", "Si + IC SUM Energy VS IC SUM", 256, 2048, 8192, 256, 1500, 4500);
+	emmaICSumVSiPlusIC = new TH2F("emmaICSumVSiPlusIC", "Si + IC SUM Energy VS IC SUM", 800, 2048, 4600, 800, 1500, 4500);
 	emmaICSumVSiPlusIC->GetXaxis()->SetTitle("Silicon + IC Sum");
 	emmaICSumVSiPlusIC->GetYaxis()->SetTitle("IC Sum");
 	emmaList->Add(emmaICSumVSiPlusIC);

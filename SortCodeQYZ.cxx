@@ -230,8 +230,8 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
             {
                 em_hit = emma->GetEmmaHit(i);
                 emmaPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y()); // Raw 2D pgac
-                xPos->Fill(em_hit->GetPosition().X());   // Pgac x position 
-                yPos->Fill(em_hit->GetPosition().Y());   // pgac y position 
+                emmaXpos->Fill(em_hit->GetPosition().X());   // Pgac x position 
+                emmaYpos->Fill(em_hit->GetPosition().Y());   // pgac y position 
                 for (int j = 0; j < s3->GetPixelMultiplicity(); j++)
                 {
                     s3hit = s3->GetPixelHit(j);
@@ -260,13 +260,13 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
             }
 
             // PID gated PGAC: 
-            for (int k = 0; k < emma->GetMultiplicity(), k++)
+            for (int k = 0; k < emma->GetMultiplicity(); k++)
             {
                 em_hit = emma->GetEmmaHit(k);
                 for (int m = 0; m < emma->GetSiMultiplicity(); m++)
                 {
                     si_hit = emma->GetSiHit(m); 
-                    if (Mg26_Cut->IsInside(si_hit->GetEnergy(), tempIC))
+                    if (Mg26_cut->IsInside(si_hit->GetEnergy(), tempIC))
                     {
                         pgac26MgPID->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y());
                     }

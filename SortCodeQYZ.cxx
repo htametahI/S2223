@@ -229,14 +229,15 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                     emmaPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y()); // Raw pgac
                     if (s3hit->GetTime() - em_hit->GetTime() > 350 && s3hit->GetTime() - em_hit->GetTime() < 530)
                     {
-                        {
+                        
                             emmaS3TimeGatedPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y()); // time gated pgac
-                        }
+                        
                     }
                 }
             }
+        }
 
-        } // end of jentries loop
+    } // end of jentries loop
         printf("\nEnd of main event loops");
         cout << "Entry " << analentries << " of " << analentries << " , 100% complete" << endl;
         fflush(stdout);
@@ -272,8 +273,9 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
         // Write out the Histogram file
         myfile->Write();
         myfile->Close();
-    }
-} // end of SortCode
+    
+} 
+// end of SortCode
 
 // main function here
 int main(int argc, char **argv)

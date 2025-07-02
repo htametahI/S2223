@@ -220,7 +220,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
             s3E->Fill(s3hit->GetEnergy());
         }
 
-        // EMMA gatede PGAC
+        
         if (emma)
         {   
             tempIC = 0; // initialize IC energy accumulator 
@@ -238,12 +238,10 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                         emmaS3TimeGatedPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y()); // time gated pgac
                     }
                 }
-            }
-
-            // ========================================= END OF EMMA-S3 ====================================
+            } // end of EMMA - S3
 
             // ========================================= IC ============================================
-            for (int i = 0; i < emma->GetMultiplicity(); i++)
+            for (int i = 0; i < emma->GetICMultiplicity(); i++)
             {
                 ic_hit = emma->GetICHit(i);
                 emmaICSegmentEnergy[ic_hit->GetSegment()]->Fill(ic_hit->GetEnergy()); 
@@ -258,7 +256,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                 emmaICSumVSi->Fill(si_hit->GetEnergy(), tempIC); 
                 emmaICSumVSiPlusIC->Fill(si_hit->GetEnergy() + tempIC, tempIC);
             }
-            // ========================================= END OF IC ======================================
+            
         }
     } // end of jentries loop
     printf("\nEnd of main event loops");

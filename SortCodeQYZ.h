@@ -73,7 +73,6 @@ void SortCode::Initialise()
 	emmaList = new TList;
 	PIDList = new TList;
 	tofList = new TList;
-	icList = new TList;
 	printf("Creating histograms\n");
 
 	// TIGRESS

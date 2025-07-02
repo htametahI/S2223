@@ -103,7 +103,7 @@ void SortCode::Initialise()
 	emmaList->Add(emmadEE);
 	emmaICSumVSi = new TH2F("emmaICSumVSi", "Si Energy VS IC SUM;Silicon Energy (arb.);IC Sum (arb.)", 4096, 0, 4096, 16384, 0, 16384);
 	emmaList->Add(emmaICSumVSi);
-	emmaICSumVSiPlusIC = new TH2F("emmaICSumVSiPlusIC", "Si + IC SUM Energy VS IC SUM", 256, 2048, 4096, 256, 1500, 3500);
+	emmaICSumVSiPlusIC = new TH2F("emmaICSumVSiPlusIC", "Si + IC SUM Energy VS IC SUM", 256, 2048, 8192, 256, 1500, 4500);
 	emmaICSumVSiPlusIC->GetXaxis()->SetTitle("Silicon + IC Sum");
 	emmaICSumVSiPlusIC->GetYaxis()->SetTitle("IC Sum");
 	emmaList->Add(emmaICSumVSiPlusIC);

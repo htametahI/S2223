@@ -53,8 +53,11 @@ bool goodIC(double tempIC[])
 {
     //  double gatemin[4] = {2400, 2400, 2400, 200}; // IC Segment Minimum energy gates. Change !!!
     //  double gatemax[4] = {3200, 3200, 3200, 3200}; // IC Segment Maximum energy gates. Change !!!
-    double gatemin[4] = {400, 440, 440, 420}; // gh
-    double gatemax[4] = {550, 580, 600, 580}; // gh ... for 21Ne recoils in S1873
+    // double gatemin[4] = {400, 440, 440, 420}; // gh
+    // double gatemax[4] = {550, 580, 600, 580}; // gh ... for 21Ne recoils in S1873
+    
+    double gatemin[4] = {550, 600, 620, 600}; // S2223
+    double gatemax[4] = {670, 720, 750, 710};
     bool good = true;
     for (int i = 0; i < 4; i++)
     {

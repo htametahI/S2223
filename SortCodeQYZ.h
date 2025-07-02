@@ -50,6 +50,7 @@ TH2F *s3Rings, *s3Sectors, *s3RingsT, *s3SectorsT, *siETheta, *s3Hitmap, *s3Ring
 TH1F *s3EmmaTof, *ssbICTof, *ssbSiTof, *tigICTof, *tigAnodeTof;
 
 // PID
+TH1F *pgacXPos26MgPID; *addDopp26MgPID; 
 TH2F *pgac26MgPID; 
 
 
@@ -153,4 +154,9 @@ void SortCode::Initialise()
 	// PID 
 	pgac26MgPID = new TH2F("Mg-26 PID Gated Pgac", "Mg-26 PID Gated Pgac; X Position (mm);Y Position(mm)", 160, -80, 80, 120, -60, 60); 
 	PIDList->Add(pgac26MgPID);
+	pgacXPos26MgPID = new TH1F("Mg-26 PID Gateed Pgac X Position", "Pgac; X Postion(mm); Counts", 100, -40, 40); 
+	PIDList->Add(pgacXPos26MgPID);
+	addDopp26MgPID = new TH1F("Mg-26 PID Gated Doppler Corrected TIGRESS Addback Spectrum", "addDoppp;Energy (keV);Counts", 8192, 0, 8192);
+	PIDList->Add("addDopp26MgPID"); 
+
 }

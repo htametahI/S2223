@@ -269,10 +269,21 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                     if (Mg26_cut->IsInside(si_hit->GetEnergy(), tempIC))
                     {
                         pgac26MgPID->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y());
+                        pgacXPos26MgPID->Fill(em_hit->GetPosition().X()); 
+                        if (tigress)  // why is negative emma x position inserted here in the previous code? 
+                        {
+                           for (int j = 0; j < tigress->GetAddbackMultiplicity(); j++)
+                           {
+                             add_hit = tigress->GetAddbackHit();
+                             addDopp26MgPID->Fill(add_hit->GetDoppler(particle_betaDoppler)); 
+                           } 
+                        }
                     }
                 }
-
             }
+
+            
+
             
         }
     } // end of jentries loop

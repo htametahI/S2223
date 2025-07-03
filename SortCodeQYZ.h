@@ -158,7 +158,7 @@ void SortCode::Initialise()
 	PIDList->Add(pgacXPos26MgPID);
 	addDopp26MgPID = new TH1F("Mg-26 PID Gated Doppler Corrected TIGRESS Addback Spectrum", "addDopp;Energy (keV);Counts", 1000, 0, 8192);
 	PIDList->Add(addDopp26MgPID); 
-	addDopp26MgPIDS3T = new TH1F("Mg-26 PID, EMMA-S3 Time Gated Doppler Corrected TIGRESS Addback Spectrum", "addDopppS3TPID;Energy (keV);Counts", 1000, 0, 8192);
+	addDopp26MgPIDS3T = new TH1F("Mg-26 PID EMMA-S3 Time Gated Doppler Corrected TIGRESS Addback Spectrum", "addDopppS3TPID;Energy (keV);Counts", 1000, 0, 8192);
 	PIDList->Add(addDopp26MgPIDS3T); 
 	pgacS3TgMg26PID = new TH2F("Mg-26 PID EMMA-S3 Time Gated Pgac", "Mg-26 PID EMMA-S3 Time Gated Pgac; X Position (mm);Y Position(mm)", 160, -80, 80, 120, -60, 60); 
 	PIDList->Add(pgacS3TgMg26PID);

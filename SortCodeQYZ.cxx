@@ -60,7 +60,7 @@ double tig_emmasi_T[2] = {800, 1000};  // TIGRESS-EMMA Si Timing
 double tig_emmaic_T[2] = {800, 1000};  // TIGRESS-EMMA IC Timing
 double s3_emma_T[2] = {350, 620};      // S3-EMMA Timing
 double gamma_350_E[2] = {340, 350};    // 350keV Gammas
-double gamma_1129_E[2] = {1125, 1145}  // 1129keV gmma 26Mg 
+double gamma_1129_E[2] = {1125, 1145};  // 1129keV gmma 26Mg 
 double gamma_1274_E[2] = {1250, 1300}; // 1274keV gamma 26Mg
 double gamma_1808_E[2] = {1805, 1820}; // 1808=keV gamma 26Mg
 
@@ -219,7 +219,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                 for (int j = 0; j < s3->GetPixelMultiplicity(); j++)
                 {
                     s3hit = s3->GetPixelHit(j);
-                    s3emmatof->Fill(s3hit)
+                    s3EmmaTof->Fill(s3hit)
                     if (s3hit->GetTime() - em_hit->GetTime() > s3_emma_T[0] && s3hit->GetTime() - em_hit->GetTime() < s3_emma_T[1])
                     {
                         emmaS3TimeGatedPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y()); // time gated pgac
@@ -260,7 +260,6 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                     {
                         pgac26MgPID->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y());
                         pgacXPos26MgPID->Fill(em_hit->GetPosition().X()); 
-                        if (em_hit->GetTime() - )
                         // tigress coincidence: 
                         if (tigress)  // why is negative emma x position inserted here in the previous code? 
                         {

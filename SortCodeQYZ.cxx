@@ -288,7 +288,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                         // if (s3hit->GetTime() - si_hit->GetTime() > s3_emma_T[0] && s3hit->GetTime() - si_hit->GetTime() < s3_emma_T[1] && tigress)
                             for (int k; k < tigress->GetAddbackMultiplicity(); k++)
                             {
-                                count << "here"<< endl; 
+                                cout << "here"<< endl; 
                                 add_hit = tigress->GetAddbackHit(k);
                                 addDopp26MgPIDS3T->Fill(add_hit->GetDoppler(particle_betaDoppler)); 
                                  

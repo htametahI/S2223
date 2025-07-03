@@ -291,7 +291,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                                 add_hit = tigress->GetAddbackHit(k);
                                 addDopp26MgPIDS3T->Fill(add_hit->GetDoppler(particle_betaDoppler)); 
                             }
-                        tigress->ResetAddback();
+                        //tigress->ResetAddback();
                     }
                 }
             }

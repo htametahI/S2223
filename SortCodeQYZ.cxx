@@ -285,6 +285,8 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                     for (int j; j < s3->GetPixelMultiplicity(); j++)
                     {
                         s3hit = s3->GetPixelHit(j);
+                        cout << "here?"<<endl; 
+                        
                         // if (s3hit->GetTime() - si_hit->GetTime() > s3_emma_T[0] && s3hit->GetTime() - si_hit->GetTime() < s3_emma_T[1] && tigress)
                             for (int k; k < tigress->GetAddbackMultiplicity(); k++)
                             {

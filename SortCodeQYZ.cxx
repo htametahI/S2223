@@ -99,8 +99,6 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
     AnalysisTree->Add(afile);
     long analentries = AnalysisTree->GetEntries();
     const char *testval = "NULL";
-    printf("Trees Loaded (line 117)");
-    // Checks for branches and sets pointers
     TEmma *emma = 0;
     if (AnalysisTree->FindBranch("TEmma"))
     {
@@ -176,7 +174,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
     // TCutG *Mg26_cut = (TCutG *)cutFile->Get("Mg26_cut");
     // TCutG *Al26_cut = (TCutG *)cutFile->Get("Al26_cut");
 
-    TFile *cutFile = new TFile("26MgCut.root");
+    TFile *cutFile = new TFile("Mg26_Cut_July3.root");
     TCutG *Mg26_cut = (TCutG*)cutFile->Get("CUTG");
 
     printf("\nSorting analysis events...\n");

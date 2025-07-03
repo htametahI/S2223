@@ -33,7 +33,7 @@ TList *tigList, *emmaList, *s3List, *PIDList, *tofList;
 TH1F *tigE, *tigAddE, *tigAddDoppE;
 
 // EMMA
-TH1F *emmaXpos, *emmaYpos, *emmaICSum, *emmaICE[5], *emmaSSBE[2], *emmaSiE;
+TH1F *emmaXpos, *emmaYpos, *emmaICSum, *emmaICE[5], *emmaSSBE[2], *emmaSiE; 
 TH2F *emmadEE, *emmaTigdt, *emmaICN, *emmaIC0V1, *emmaIC0V2, *emmaIC0V3, *emmaIC1V2, *emmaIC1V3, *emmaIC2V3;
 TH2F *emmadtE, *emmaICSumVSi, *emmaICSumVSiPlusIC, *emmaIC0VSi, *emmaIC1VSi, *emmaIC2VSi, *emmaIC3VSi;
 TH2F *emmaPgac, *emmaS3TimeGatedPgac, *emmaPIDGatedPgac;
@@ -50,8 +50,8 @@ TH2F *s3Rings, *s3Sectors, *s3RingsT, *s3SectorsT, *siETheta, *s3Hitmap, *s3Ring
 TH1F *s3EmmaTof, *ssbICTof, *ssbSiTof, *tigICTof, *tigAnodeTof;
 
 // PID
-TH1F *pgacXPos26MgPID, *addDopp26MgPID; 
-TH2F *pgac26MgPID; 
+TH1F *pgacXPos26MgPID, *addDopp26MgPID, *addDopp26MgPIDS3T; 
+TH2F *pgac26MgPID, *pgacS3TgMg26PID; 
 
 
 // Cuts
@@ -154,10 +154,14 @@ void SortCode::Initialise()
 	// PID 
 	pgac26MgPID = new TH2F("Mg-26 PID Gated Pgac", "Mg-26 PID Gated Pgac; X Position (mm);Y Position(mm)", 160, -80, 80, 120, -60, 60); 
 	PIDList->Add(pgac26MgPID);
-	pgacXPos26MgPID = new TH1F("Pgac", "Mg-26 PID Gateed Pgac X Position; X Postion(mm); Counts", 100, -40, 40); 
+	pgacXPos26MgPID = new TH1F("Mg-26 PID Gated Pgac X Position", "Mg-26 PID Gated Pgac X Position; X Postion(mm); Counts", 100, -40, 40); 
 	PIDList->Add(pgacXPos26MgPID);
-	addDopp26MgPID = new TH1F("Mg-26 PID Gated Doppler Corrected TIGRESS Addback Spectrum", "addDoppp;Energy (keV);Counts", 4096, 0, 8192);
+	addDopp26MgPID = new TH1F("Mg-26 PID Gated Doppler Corrected TIGRESS Addback Spectrum", "addDopp;Energy (keV);Counts", 1000, 0, 8192);
 	PIDList->Add(addDopp26MgPID); 
+	addDopp26MgPIDS3T = new TH1F("Mg-26 PID, EMMA-S3 Time Gated Doppler Corrected TIGRESS Addback Spectrum", "addDopppS3TPID;Energy (keV);Counts", 1000, 0, 8192);
+	PIDList->Add(addDopp26MgPIDS3T); 
+	pgacS3TgMg26PID = new TH2F("Mg-26 PID EMMA-S3 Time Gated Pgac", "Mg-26 PID EMMA-S3 Time Gated Pgac; X Position (mm);Y Position(mm)", 160, -80, 80, 120, -60, 60); 
+	PIDList->Add(pgacS3TgMg26PID);
 
 
 }

@@ -277,6 +277,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
 
 
             // EMMA - S3 - PID 
+            tigress->ResetAddback();
             for (int i = 0; i < emma->GetSiMultiplicity(); i++){
                 si_hit = emma->GetSiHit(i);
                 if (Mg26_cut->IsInside(si_hit->GetEnergy(), tempIC) && s3)

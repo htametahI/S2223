@@ -266,7 +266,9 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                 for (int m = 0; m < emma->GetSiMultiplicity(); m++)
                 {
                     si_hit = emma->GetSiHit(m); 
-                    cout << goodIC(tempICArray) << endl; 
+                    bool yes; 
+                    yes = Mg26_cut->IsInside(si_hit->GetEnergy(), tempIC) && goodIC(tempICArray); 
+                    cout << yes << endl; 
                     if (Mg26_cut->IsInside(si_hit->GetEnergy(), tempIC) && goodIC(tempICArray))
                     {
                         pgac26MgPID->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y());

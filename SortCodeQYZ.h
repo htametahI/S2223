@@ -154,7 +154,7 @@ void SortCode::Initialise()
 	// PID 
 	pgac26MgPID = new TH2F("Mg-26 PID Gated Pgac", "Mg-26 PID Gated Pgac; X Position (mm);Y Position(mm)", 160, -80, 80, 120, -60, 60); 
 	PIDList->Add(pgac26MgPID);
-	pgacXPos26MgPID = new TH1F("Mg-26 PID Gateed Pgac X Position", "Pgac; X Postion(mm); Counts", 100, -40, 40); 
+	pgacXPos26MgPID = new TH1F("Pgac", "Mg-26 PID Gateed Pgac X Position; X Postion(mm); Counts", 100, -40, 40); 
 	PIDList->Add(pgacXPos26MgPID);
 	addDopp26MgPID = new TH1F("Mg-26 PID Gated Doppler Corrected TIGRESS Addback Spectrum", "addDoppp;Energy (keV);Counts", 4096, 0, 8192);
 	PIDList->Add(addDopp26MgPID); 

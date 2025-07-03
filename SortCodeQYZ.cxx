@@ -51,12 +51,7 @@ bool loadCutG(char const *cutfile)
 
 bool goodIC(double tempIC[])
 {
-    //  double gatemin[4] = {2400, 2400, 2400, 200}; // IC Segment Minimum energy gates. Change !!!
-    //  double gatemax[4] = {3200, 3200, 3200, 3200}; // IC Segment Maximum energy gates. Change !!!
-    // double gatemin[4] = {400, 440, 440, 420}; // gh
-    // double gatemax[4] = {550, 580, 600, 580}; // gh ... for 21Ne recoils in S1873
-
-    double gatemin[4] = {550, 600, 620, 600}; // S2223
+    double gatemin[4] = {550, 600, 620, 600}; // Gate for 26Mg events for each IC segment 
     double gatemax[4] = {670, 720, 750, 710};
     bool good = true;
     for (int i = 0; i < 4; i++)
@@ -224,6 +219,10 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
         if (emma)
         {   
             tempIC = 0; // initialize IC energy accumulator, this is the total energy loss of particle in all the ICs 
+            for (int i = 0; i < 4; i++)  // initilize IC arry for each segment 
+            {
+                tempICArray[i] = 0; 
+            }
 
             // ========================================= EMMA-S3 =========================================
             for (int i = 0; i < emma->GetMultiplicity(); i++)
@@ -267,6 +266,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                 for (int m = 0; m < emma->GetSiMultiplicity(); m++)
                 {
                     si_hit = emma->GetSiHit(m); 
+                    cout << goodIC(tempICArray); 
                     if (Mg26_cut->IsInside(si_hit->GetEnergy(), tempIC) && goodIC(tempICArray))
                     {
                         pgac26MgPID->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y());

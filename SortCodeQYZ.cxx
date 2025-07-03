@@ -284,18 +284,14 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                     {
                         cout << "here?"<<endl; 
                         s3hit = s3->GetPixelHit(j);
-                        
-                        
                         // if (s3hit->GetTime() - si_hit->GetTime() > s3_emma_T[0] && s3hit->GetTime() - si_hit->GetTime() < s3_emma_T[1] && tigress)
                             for (int k; k < tigress->GetAddbackMultiplicity(); k++)
                             {
                                 cout << "here"<< endl; 
                                 add_hit = tigress->GetAddbackHit(k);
                                 addDopp26MgPIDS3T->Fill(add_hit->GetDoppler(particle_betaDoppler)); 
-                                 
                             }
-                        
-                        //tigress->ResetAddback();
+                        tigress->ResetAddback();
                     }
                 }
             }

@@ -248,7 +248,8 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                 ic_hit = emma->GetICHit(i);
                 emmaICSegmentEnergy[ic_hit->GetSegment()]->Fill(ic_hit->GetEnergy()); 
                 emmaICSegment->Fill(ic_hit->GetSegment(), ic_hit->GetEnergy()); 
-                tempIC += ic_hit->GetEnergy(); 
+                tempIC += ic_hit->GetEnergy();      // this is the total energy deposited in 4 IC segments 
+                tempICArray[ic_hit->GetSegment() - 1] = ic_hit->GetEnergy(); // this is the energy deposited in each segment. Index 0 is IC seg 1 (GetSegment() returns 1,2,3...) 
             }
 
             // IC and Si: 
@@ -266,7 +267,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                 for (int m = 0; m < emma->GetSiMultiplicity(); m++)
                 {
                     si_hit = emma->GetSiHit(m); 
-                    if (Mg26_cut->IsInside(si_hit->GetEnergy(), tempIC))
+                    if (Mg26_cut->IsInside(si_hit->GetEnergy(), tempIC) && goodIC(tempICArray))
                     {
                         pgac26MgPID->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y());
                         pgacXPos26MgPID->Fill(em_hit->GetPosition().X()); 

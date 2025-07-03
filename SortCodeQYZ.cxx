@@ -282,6 +282,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                 si_hit = emma->GetSiHit(i);
                 if (Mg26_cut->IsInside(si_hit->GetEnergy(), tempIC) && s3)
                 {
+                    cout << "\nfirst if"<< endl; 
                     for (int j; j < s3->GetPixelMultiplicity(); j++)
                     {
                         s3hit = s3->GetPixelHit(j);

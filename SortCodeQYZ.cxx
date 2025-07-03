@@ -294,6 +294,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                                  
                             }
                         }
+                        tigress->ResetAddback();
                     }
                 }
             }

@@ -35,7 +35,7 @@ bool loadCutG(char const *cutfile)
 
 bool goodIC(double tempIC[])
 {
-    double gatemin[4] = {550, 600, 620, 600}; // Gate for 26Mg events for each IC segment 
+    double gatemin[4] = {550, 600, 620, 600}; // Gate for 26Mg events for each IC segment
     double gatemax[4] = {670, 720, 750, 710};
     bool good = true;
     for (int i = 0; i < 4; i++)
@@ -60,7 +60,7 @@ double tig_emmasi_T[2] = {800, 1000};  // TIGRESS-EMMA Si Timing
 double tig_emmaic_T[2] = {800, 1000};  // TIGRESS-EMMA IC Timing
 double s3_emma_T[2] = {350, 620};      // S3-EMMA Timing
 double gamma_350_E[2] = {340, 350};    // 350keV Gammas
-double gamma_1129_E[2] = {1125, 1145};  // 1129keV gmma 26Mg 
+double gamma_1129_E[2] = {1125, 1145}; // 1129keV gmma 26Mg
 double gamma_1274_E[2] = {1250, 1300}; // 1274keV gamma 26Mg
 double gamma_1808_E[2] = {1805, 1820}; // 1808=keV gamma 26Mg
 
@@ -167,7 +167,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
 
     std::cout << "\nLoading cuts now";
     // TFile *cutFile = new TFile("26MgCut.root");
-    //TFile *cutFile = new TFile("PID_Cuts.root");
+    // TFile *cutFile = new TFile("PID_Cuts.root");
 
     // TCutG *F19_cut = (TCutG *)cutFile->Get("F19_cut");
     // TCutG *Na24_cut = (TCutG *)cutFile->Get("Ne22_cut"); // the cut itself is called "Ne22" but it is actually 24Na.
@@ -175,7 +175,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
     // TCutG *Al26_cut = (TCutG *)cutFile->Get("Al26_cut");
 
     TFile *cutFile = new TFile("Mg26_Cut_July3.root");
-    TCutG *Mg26_cut = (TCutG*)cutFile->Get("CUTG");
+    TCutG *Mg26_cut = (TCutG *)cutFile->Get("CUTG");
 
     printf("\nSorting analysis events...\n");
     for (int jentry = 0; jentry < analentries; jentry++)
@@ -190,21 +190,52 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
         exc = -1; // that way we don't accidentally fill things with the previous exc energy
         reac->SetExcEnergy(0);
 
-        // S3 Raw Energy
-
-        for (int i = 0; i < s3->GetPixelMultiplicity(); i++)
+        // ========================================== BASIC S3 HISTOGRAMS ======================================
+        if (s3)
         {
-            s3hit = s3->GetPixelHit(i);
-            s3E->Fill(s3hit->GetEnergy());
+            for (int i = 0; i < s3->GetPixelMultiplicity(); i++)
+            {
+                s3hit = s3->GetPixelHit(i);
+                s3E->Fill(s3hit->GetEnergy());
+            }
         }
 
-        
-        if (emma)
-        {   
-            tempIC = 0; // initialize IC energy accumulator, this is the total energy loss of particle in all the ICs 
-            for (int i = 0; i < 4; i++)  // initilize IC arry for each segment 
+        // ========================================== BASIC TIGRESS HISTOGRAMS ======================================
+        // RAW ENERGY: 
+        if (tigress)
+        {
+            for (int i = 0; i < tigress->GetMultiplicity(); i++)
             {
-                tempICArray[i] = 0; 
+                tig_hit = tigress->GetTigressHit(i);
+                if (tig_hit != NULL)    // check if it exsits first 
+                {
+                    suppTig = tigress->BGOFired();  // check if BGO fired, veto the event if so 
+                    if (!suppTig && tig_hit->GetEnergy() > 15)  // if BGO not fired and event has more than 15keV of energy, fill the energy hist. 
+                    {
+                        tigE->Fill(tig_hit->GetEnergy()); 
+                    }
+                }
+            } // end of tigress->GetMultiplicity. 
+        }
+
+        // TIGRESS ADDBACK: 
+            for (int i = 0; i < tigress->GetAddbackMultiplicity(); i++)
+            {
+                add_hit = tigress->GetAddbackHit(i);
+                suppAdd = tigress->BGOFired() // check if BGO fired for this addback event, veto if so 
+                if (!suppAdd && add_hit->GetEnergy() > 15)
+                {
+                    tigAddDoppE->Fill(add_hit->GetDoppler(particle_betaDoppler))
+                }
+            } // End of tigress->GetAddbackMultiplicity()
+        
+        //  ========================================== EMMA ======================================
+        if (emma)
+        {
+            tempIC = 0;                 // initialize IC energy accumulator, this is the total energy loss of particle in all the ICs
+            for (int i = 0; i < 4; i++) // initilize IC arry for each segment
+            {
+                tempICArray[i] = 0;
             }
 
             // ========================================= EMMA-S3 =========================================
@@ -212,8 +243,8 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
             {
                 em_hit = emma->GetEmmaHit(i);
                 emmaPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y()); // Raw 2D pgac
-                emmaXpos->Fill(em_hit->GetPosition().X());   // Pgac x position 
-                emmaYpos->Fill(em_hit->GetPosition().Y());   // pgac y position 
+                emmaXpos->Fill(em_hit->GetPosition().X());                            // Pgac x position
+                emmaYpos->Fill(em_hit->GetPosition().Y());                            // pgac y position
                 for (int j = 0; j < s3->GetPixelMultiplicity(); j++)
                 {
                     s3hit = s3->GetPixelHit(j);
@@ -222,85 +253,80 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                     {
                         emmaS3TimeGatedPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y()); // time gated pgac
                     }
-                }
+                }  
             } // end of EMMA - S3
-
-            
 
             // ========================================= IC ============================================
             for (int i = 0; i < emma->GetICMultiplicity(); i++)
             {
                 ic_hit = emma->GetICHit(i);
-                emmaICSegmentEnergy[ic_hit->GetSegment()]->Fill(ic_hit->GetEnergy()); 
-                emmaICSegment->Fill(ic_hit->GetSegment(), ic_hit->GetEnergy()); 
-                tempIC += ic_hit->GetEnergy();      // this is the total energy deposited in 4 IC segments 
-                tempICArray[ic_hit->GetSegment() - 1] = ic_hit->GetEnergy(); // this is the energy deposited in each segment. Index 0 is IC seg 1 (GetSegment() returns 1,2,3...) 
+                emmaICSegmentEnergy[ic_hit->GetSegment()]->Fill(ic_hit->GetEnergy());
+                emmaICSegment->Fill(ic_hit->GetSegment(), ic_hit->GetEnergy());
+                tempIC += ic_hit->GetEnergy();                               // this is the total energy deposited in 4 IC segments
+                tempICArray[ic_hit->GetSegment() - 1] = ic_hit->GetEnergy(); // this is the energy deposited in each segment. Index 0 is IC seg 1 (GetSegment() returns 1,2,3...)
             }
 
-            
-
-            // IC and Si: 
+            // IC and Si:
             for (int j = 0; j < emma->GetSiMultiplicity(); j++)
             {
                 si_hit = emma->GetSiHit(j);
-                emmaICSumVSi->Fill(si_hit->GetEnergy(), tempIC); 
+                emmaICSumVSi->Fill(si_hit->GetEnergy(), tempIC);
                 emmaICSumVSiPlusIC->Fill(si_hit->GetEnergy() + tempIC, tempIC);
             }
 
-            // PID gated PGAC: 
+            // IC data gating on 1808 keV gamma ray from 26Mg: 
+            
+
+            // PID gated PGAC:
             for (int k = 0; k < emma->GetMultiplicity(); k++)
             {
                 em_hit = emma->GetEmmaHit(k);
                 for (int m = 0; m < emma->GetSiMultiplicity(); m++)
                 {
-                    si_hit = emma->GetSiHit(m); 
+                    si_hit = emma->GetSiHit(m);
                     if (Mg26_cut->IsInside(si_hit->GetEnergy(), tempIC))
                     {
                         pgac26MgPID->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y());
-                        pgacXPos26MgPID->Fill(em_hit->GetPosition().X()); 
-                        // tigress coincidence: 
-                        if (tigress)  // why is negative emma x position inserted here in the previous code? 
+                        pgacXPos26MgPID->Fill(em_hit->GetPosition().X());
+                        // tigress coincidence:
+                        if (tigress) // why is negative emma x position inserted here in the previous code?
                         {
-                           for (int j = 0; j < tigress->GetAddbackMultiplicity(); j++)
-                           {
-                             add_hit = tigress->GetAddbackHit(j);
-                             addDopp26MgPID->Fill(add_hit->GetDoppler(particle_betaDoppler)); 
-                           } 
+                            for (int j = 0; j < tigress->GetAddbackMultiplicity(); j++)
+                            {
+                                add_hit = tigress->GetAddbackHit(j);
+                                addDopp26MgPID->Fill(add_hit->GetDoppler(particle_betaDoppler));
+                            }
                         }
-                        
+
                         tigress->ResetAddback();
                     }
                 }
             }
 
 
-            // EMMA - S3 - PID 
+
+            // EMMA - S3 - PID (UNFINISHED)
             tigress->ResetAddback();
-            for (int i = 0; i < emma->GetSiMultiplicity(); i++){
+            for (int i = 0; i < emma->GetSiMultiplicity(); i++)
+            {
                 si_hit = emma->GetSiHit(i);
                 if (Mg26_cut->IsInside(si_hit->GetEnergy(), tempIC))
                 {
                     for (int j; j < s3->GetPixelMultiplicity(); j++)
                     {
-                        cout << "here?"<<endl; 
+                        cout << "here?" << endl;
                         s3hit = s3->GetPixelHit(j);
                         // if (s3hit->GetTime() - si_hit->GetTime() > s3_emma_T[0] && s3hit->GetTime() - si_hit->GetTime() < s3_emma_T[1] && tigress)
-                            for (int k; k < tigress->GetAddbackMultiplicity(); k++)
-                            {
-                                cout << "here"<< endl; 
-                                add_hit = tigress->GetAddbackHit(k);
-                                addDopp26MgPIDS3T->Fill(add_hit->GetDoppler(particle_betaDoppler)); 
-                            }
-                        //tigress->ResetAddback();
+                        for (int k; k < tigress->GetAddbackMultiplicity(); k++)
+                        {
+                            cout << "here" << endl;
+                            add_hit = tigress->GetAddbackHit(k);
+                            addDopp26MgPIDS3T->Fill(add_hit->GetDoppler(particle_betaDoppler));
+                        }
+                        // tigress->ResetAddback();
                     }
                 }
             }
-
-            
-
-            
-
-            
         }
     } // end of jentries loop
     printf("\nEnd of main event loops");
@@ -335,19 +361,16 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
     emmaList->Write();
     myfile->cd();
 
-    // PID 
+    // PID
     TDirectory *pidDir = myfile->mkdir("PID");
     pidDir->cd();
     PIDList->Write();
     myfile->cd();
 
-
-    
-
     // Write out the Histogram file
     myfile->Write();
     myfile->Close();
-}// end of SortCode
+} // end of SortCode
 
 // main function here
 int main(int argc, char **argv)

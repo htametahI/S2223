@@ -78,12 +78,13 @@ void SortCode::Initialise()
 	tofList = new TList;
 	printf("Creating histograms\n");
 
+	// FORMAT: 
+	// hist = new TH1F("filename/label", "Title;Xlabel;Ylabel", #of bins, low, high)
+
 	// TIGRESS
-	tigE = new TH1F("tigE", "TigressEnergy;Energy (keV);Counts", 8192, 0, 16384);
+	tigE = new TH1F("tigE", "Tigress Raw Energy;Energy (keV);Counts", 8192, 0, 16384);
 	tigList->Add(tigE);
-	tigAddE = new TH1F("tigAddE", "TigressAddbackEnergy;Energy (keV);Counts", 8192, 0, 16384);
-	tigList->Add(tigAddE);
-	tigAddDoppE = new TH1F("tigAddDoppE", "TigressAddbackDopplerCorrectedEnergy;Energy (keV);Counts", 8192, 0, 16384);
+	tigAddDoppE = new TH1F("tigAddDoppE", "Tigress Addback Doppler Corrected Energy;Energy (keV);Counts", 3000, 0, 9000);
 	tigList->Add(tigAddDoppE);
 
 	// EMMA
@@ -100,8 +101,6 @@ void SortCode::Initialise()
 
 	emmaSiE = new TH1F("EMMASiE", "EMMA Focal Plane Silicon Energy;Energy (keV);Counts", 16384, 0, 16384);
 	emmaList->Add(emmaSiE);
-	emmadEE = new TH2F("emmadEE", "Si Energy VS IC SUM, EMMA;Silicon Energy (arb.);IC Sum (keV)", 1500, 0, 1500, 6000, 0, 6000);
-	emmaList->Add(emmadEE);
 	emmaICSumVSi = new TH2F("emmaICSumVSi", "Si Energy VS IC SUM;Silicon Energy (keV);IC Sum (keV)", 4096, 0, 4096, 16384, 0, 16384);
 	emmaList->Add(emmaICSumVSi);
 	emmaICSumVSiPlusIC = new TH2F("emmaICSumVSiPlusIC", "Si + IC SUM Energy VS IC SUM", 800, 2048, 4600, 800, 1500, 4500);

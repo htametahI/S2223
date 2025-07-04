@@ -209,7 +209,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                 tig_hit = tigress->GetTigressHit(i);
                 if (tig_hit != NULL)    // check if it exsits first 
                 {
-                    suppTig = tigress->BGOFired();  // check if BGO fired, veto the event if so 
+                    suppTig = tig_hit->BGOFired();  // check if BGO fired, veto the event if so 
                     if (!suppTig && tig_hit->GetEnergy() > 15)  // if BGO not fired and event has more than 15keV of energy, fill the energy hist. 
                     {
                         tigE->Fill(tig_hit->GetEnergy()); 
@@ -222,7 +222,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
             for (int i = 0; i < tigress->GetAddbackMultiplicity(); i++)
             {
                 add_hit = tigress->GetAddbackHit(i);
-                suppAdd = tigress->BGOFired() // check if BGO fired for this addback event, veto if so 
+                suppAdd = add_hit->BGOFired() // check if BGO fired for this addback event, veto if so 
                 if (!suppAdd && add_hit->GetEnergy() > 15)
                 {
                     tigAddDoppE->Fill(add_hit->GetDoppler(particle_betaDoppler))

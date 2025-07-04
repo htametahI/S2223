@@ -130,7 +130,7 @@ void SortCode::Initialise()
 	// EMMA - S3 
 	emmaS3TimeGatedPgac = new TH2F("emmaS3TimeGatedPgac", "PGAC Time Gated Hit Pattern", 160, -80, 80, 120, -60, 60);
 	emmaS3List->Add(emmaS3TimeGatedPgac);
-	mg26ExcEmmaS3 = new TH2F("mg26Exc", "EMMA-S3 Gated 26Mg Excitation energy", 8192, 0, 14000);
+	mg26ExcEmmaS3 = new TH1F("mg26Exc", "EMMA-S3 Gated 26Mg Excitation energy; Energy(MeV); Counts", 130, 0, 13);
 	emmaList->Add(emmaS3TimeGatedPgac);
 
 	// TOF

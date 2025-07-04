@@ -225,7 +225,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                 suppAdd = add_hit->BGOFired(); // check if BGO fired for this addback event, veto if so 
                 if (!suppAdd && add_hit->GetEnergy() > 15)
                 {
-                    tigAddDoppE->Fill(add_hit->GetDoppler(particle_betaDoppler))
+                    tigAddDoppE->Fill(add_hit->GetDoppler(particle_betaDoppler));
                 }
             } // End of tigress->GetAddbackMultiplicity()
         

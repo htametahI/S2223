@@ -266,7 +266,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                     {
                         emmaS3TimeGatedPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y());   // EMMA-S3 time gated pgac 
                         thetalab = s3pos.Theta(); // lab angle
-                        ekin = s3_hit->GetEnergy(); // triton energy 
+                        ekin = s3hit->GetEnergy(); // triton energy 
                         exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2); // 26Mg Excitation energy, Energy conversion from keV to MeV (1e-3), two-body reaction 
                         mg26ExcEmmaS3->Fill(exc); 
 

@@ -248,7 +248,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
             }
 
             // ----------------------------------- EMMA-S3 -----------------------------------
-            for (int i = 0; i < emma->GetMultiplicity(); i++)
+/*             for (int i = 0; i < emma->GetMultiplicity(); i++)
             {
                 em_hit = emma->GetEmmaHit(i);
                 emmaPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y()); // Raw 2D pgac
@@ -257,7 +257,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                 for (int j = 0; j < s3->GetPixelMultiplicity(); j++)
                 {
                     s3hit = s3->GetPixelHit(j);
-                    s3pos = s3hit->GetPosition(-101.25 * TMath::Pi() / 180., true); // rotation, s3 offset
+                    //s3pos = s3hit->GetPosition(-101.25 * TMath::Pi() / 180., true); // rotation, s3 offset
                     // s3pos.SetX(s3pos.X() + s3_x_offset);                            // these are all 0s, TODO: CONFIRM THIS 
                     // s3pos.SetY(s3pos.Y() + s3_y_offset);
                     // s3pos.SetZ(s3pos.Z() + s3_z_offset);
@@ -273,7 +273,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
 
                     }
                 }  
-            } // end of EMMA - S3
+            } // end of EMMA - S3 */
 
 
             // ----------------------------------- IC -----------------------------------

@@ -254,7 +254,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                 emmaPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y()); // Raw 2D pgac
                 emmaXpos->Fill(em_hit->GetPosition().X());                            // Pgac x position
                 emmaYpos->Fill(em_hit->GetPosition().Y());                            // pgac y position
-                if (s3) {
+                
                 for (int j = 0; j < s3->GetPixelMultiplicity(); j++)
                 {
                     s3hit = s3->GetPixelHit(j);
@@ -263,19 +263,19 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                     // s3pos.SetY(s3pos.Y() + s3_y_offset);
                     // s3pos.SetZ(s3pos.Z() + s3_z_offset);
                     s3EmmaTof->Fill(s3hit->GetTime() - em_hit->GetTime());  // EMMA-S3 TOF spectrum
-                    // EMMA - S3 Time gate: 
-                    // if (s3hit->GetTime() - em_hit->GetTime() > s3_emma_T[0] && s3hit->GetTime() - em_hit->GetTime() < s3_emma_T[1]) 
-                    // {
-                    //     emmaS3TimeGatedPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y());   // EMMA-S3 time gated pgac 
-                    //     // thetalab = s3pos.Theta(); // lab angle
-                    //     // ekin = s3hit->GetEnergy(); // triton energy 
-                    //     // exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2); // 26Mg Excitation energy, Energy conversion from keV to MeV (1e-3), two-body reaction 
-                    //     // mg26ExcEmmaS3->Fill(exc); 
+                    EMMA - S3 Time gate: 
+                    if (s3hit->GetTime() - em_hit->GetTime() > s3_emma_T[0] && s3hit->GetTime() - em_hit->GetTime() < s3_emma_T[1]) 
+                    {
+                        emmaS3TimeGatedPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y());   // EMMA-S3 time gated pgac 
+                        thetalab = s3pos.Theta(); // lab angle
+                        ekin = s3hit->GetEnergy(); // triton energy 
+                        exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2); // 26Mg Excitation energy, Energy conversion from keV to MeV (1e-3), two-body reaction 
+                        mg26ExcEmmaS3->Fill(exc); 
 
-                    // }
+                    }
                 }  
             } // end of EMMA - S3
-            }
+            
 
 
             // ----------------------------------- IC -----------------------------------

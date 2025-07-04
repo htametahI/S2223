@@ -281,6 +281,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                             ekin = s3hit->GetEnergy();                                                       // triton energy
                             exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);                              // 26Mg Excitation energy, Energy conversion from keV to MeV (1e-3), two-body reaction
                             mg26ExcEmmaS3->Fill(exc);
+                            
                         }
                     }
                 }

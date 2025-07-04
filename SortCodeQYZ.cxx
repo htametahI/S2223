@@ -266,10 +266,10 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                     if (s3hit->GetTime() - em_hit->GetTime() > s3_emma_T[0] && s3hit->GetTime() - em_hit->GetTime() < s3_emma_T[1]) 
                     {
                         emmaS3TimeGatedPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y());   // EMMA-S3 time gated pgac 
-                        thetalab = s3pos.Theta(); // lab angle
-                        ekin = s3hit->GetEnergy(); // triton energy 
-                        exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2); // 26Mg Excitation energy, Energy conversion from keV to MeV (1e-3), two-body reaction 
-                        mg26ExcEmmaS3->Fill(exc); 
+                        // thetalab = s3pos.Theta(); // lab angle
+                        // ekin = s3hit->GetEnergy(); // triton energy 
+                        // exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2); // 26Mg Excitation energy, Energy conversion from keV to MeV (1e-3), two-body reaction 
+                        // mg26ExcEmmaS3->Fill(exc); 
 
                     }
                 }  
@@ -340,7 +340,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                             add_hit = tigress->GetAddbackHit(k);
                             addDopp26MgPIDS3T->Fill(add_hit->GetDoppler(particle_betaDoppler));
                         }
-                        // tigress->ResetAddback();
+                        tigress->ResetAddback();
                     }
                 }
             }

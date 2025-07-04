@@ -80,7 +80,7 @@ void SortCode::Initialise()
 	emmaList = new TList;
 	PIDList = new TList;
 	tofList = new TList;
-	emmaS3List = new tigList; 
+	emmaS3List = new TList; 
 	printf("Creating histograms\n");
 
 	// FORMAT: 

@@ -27,7 +27,7 @@
 #include "TEnv.h"
 using namespace std;
 
-TList *tigList, *emmaList, *s3List, *PIDList, *tofList;
+TList *tigList, *emmaList, *s3List, *PIDList, *tofList, *emmaS3List;
 
 // TIGRESS
 TH1F *tigE, *tigAddE, *tigAddDoppE;
@@ -36,7 +36,11 @@ TH1F *tigE, *tigAddE, *tigAddDoppE;
 TH1F *emmaXpos, *emmaYpos, *emmaICSum, *emmaICE[5], *emmaSSBE[2], *emmaSiE; 
 TH2F *emmadEE, *emmaTigdt, *emmaICN, *emmaIC0V1, *emmaIC0V2, *emmaIC0V3, *emmaIC1V2, *emmaIC1V3, *emmaIC2V3;
 TH2F *emmadtE, *emmaICSumVSi, *emmaICSumVSiPlusIC, *emmaIC0VSi, *emmaIC1VSi, *emmaIC2VSi, *emmaIC3VSi;
-TH2F *emmaPgac, *emmaS3TimeGatedPgac, *emmaPIDGatedPgac;
+TH2F *emmaPgac,  *emmaPIDGatedPgac;
+
+// EMMA - S3 
+TH2F *emmaS3TimeGatedPgac; 
+TH1F *mg26ExcEmmaS3;
 
 // IC
 TH1F *emmaICSegmentEnergy[5];
@@ -82,9 +86,9 @@ void SortCode::Initialise()
 	// hist = new TH1F("filename/label", "Title;Xlabel;Ylabel", #of bins, low, high)
 
 	// TIGRESS
-	tigE = new TH1F("tigE", "Tigress Raw Energy;Energy (keV);Counts", 8192, 0, 16384);
+	tigE = new TH1F("tigE", "Tigress Raw Energy;Energy (keV);Counts", 2000, 0, 4500);
 	tigList->Add(tigE);
-	tigAddDoppE = new TH1F("tigAddDoppE", "Tigress Addback Doppler Corrected Energy;Energy (keV);Counts", 3000, 0, 9000);
+	tigAddDoppE = new TH1F("tigAddDoppE", "Tigress Addback Doppler Corrected Energy;Energy (keV);Counts", 2000, 0, 4500);
 	tigList->Add(tigAddDoppE);
 
 	// EMMA
@@ -94,8 +98,7 @@ void SortCode::Initialise()
 	emmaList->Add(emmaYpos);
 	emmaPgac = new TH2F("EMMAPgac", "PGAC Hit Pattern", 160, -80, 80, 60, -30, 30);
 	emmaList->Add(emmaPgac);
-	emmaS3TimeGatedPgac = new TH2F("emmaS3TimeGatedPgac", "PGAC Time Gated Hit Pattern", 160, -80, 80, 120, -60, 60);
-	emmaList->Add(emmaS3TimeGatedPgac);
+
 	emmaPIDGatedPgac = new TH2F("emmaPIDGatedPgac", "PGAC PID Gated Hit Pattern", 160, -80, 80, 60, -30, 30);
 	emmaList->Add(emmaPIDGatedPgac);
 
@@ -123,6 +126,12 @@ void SortCode::Initialise()
 	s3List->Add(s3RingsSectors);
 	s3RingsSectorsSinglesT = new TH1F("s3RingsSectorsSinglesT", "S3 sectorT vs ringT Multiplicity 1;Sector Time - Ring Time", 2048, -1024, 1024);
 	s3RingsSectorsSinglesT->Add(s3RingsSectorsSinglesT);
+
+	// EMMA - S3 
+	emmaS3TimeGatedPgac = new TH2F("emmaS3TimeGatedPgac", "PGAC Time Gated Hit Pattern", 160, -80, 80, 120, -60, 60);
+	emmaS3List->Add(emmaS3TimeGatedPgac);
+	mg26ExcEmmaS3 = new TH2F("mg26Exc", "EMMA-S3 Gated 26Mg Excitation energy", 8192, 0, 14000);
+	emmaList->Add(emmaS3TimeGatedPgac);
 
 	// TOF
 	s3EmmaTof = new TH1F("s3EmmaTof", "S3 EMMA TOF; S3 EMMA Time Difference(ns);", 20000, -10000, 10000);

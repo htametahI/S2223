@@ -264,9 +264,10 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
             // EMMA - S3 Kinemtaics:
             if (s3 && emma->GetMultiplicity() > 0)
             {
-                for (int i = emma->GetMultiplicity(); i++)
+                for (int i = 0; emma->GetMultiplicity(); i++)
                 {
-                    em_hit = emma->GetEmmaHit(i) for (int j = 0; j < s3->GetPixelMultiplicity(); j++)
+                    em_hit = emma->GetEmmaHit(i);
+                    for (int j = 0; j < s3->GetPixelMultiplicity(); j++)
                     {
                         s3hit = s3->GetPixelHit(j);
                         s3pos = s3hit->GetPosition(-101.25 * TMath::Pi() / 180., true); // rotation, s3 offset

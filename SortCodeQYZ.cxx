@@ -263,7 +263,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
 
 
             // EMMA - S3 Kinemtaics:
-            if (s3)
+            if (s3 && emma->GetICMultiplicity() > 0)
             {
                 for (int i = 0; emma->GetMultiplicity(); i++)
                 {

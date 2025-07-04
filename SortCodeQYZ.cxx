@@ -190,8 +190,6 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
         exc = -1; // that way we don't accidentally fill things with the previous exc energy
         reac->SetExcEnergy(0);
 
-
-
         // ========================================== S3 ======================================
         if (s3)
         {
@@ -202,41 +200,35 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
             }
         }
 
-
-
         // ========================================== BASIC TIGRESS HISTOGRAMS ======================================
-        // RAW ENERGY: 
+        // RAW ENERGY:
         if (tigress)
         {
             for (int i = 0; i < tigress->GetMultiplicity(); i++)
             {
                 tig_hit = tigress->GetTigressHit(i);
-                if (tig_hit != NULL)    // check if it exsits first 
+                if (tig_hit != NULL) // check if it exsits first
                 {
-                    suppTig = tig_hit->BGOFired();  // check if BGO fired, veto the event if so 
-                    if (!suppTig && tig_hit->GetEnergy() > 15)  // if BGO not fired and event has more than 15keV of energy, fill the energy hist. 
+                    suppTig = tig_hit->BGOFired();             // check if BGO fired, veto the event if so
+                    if (!suppTig && tig_hit->GetEnergy() > 15) // if BGO not fired and event has more than 15keV of energy, fill the energy hist.
                     {
-                        tigE->Fill(tig_hit->GetEnergy()); 
+                        tigE->Fill(tig_hit->GetEnergy());
                     }
                 }
-            } // end of tigress->GetMultiplicity. 
+            } // end of tigress->GetMultiplicity.
         }
         tigress->ResetAddback();
 
         // -----------------------------------TIGRESS ADDBACK -----------------------------------
-            for (int i = 0; i < tigress->GetAddbackMultiplicity(); i++)
+        for (int i = 0; i < tigress->GetAddbackMultiplicity(); i++)
+        {
+            add_hit = tigress->GetAddbackHit(i);
+            suppAdd = add_hit->BGOFired(); // check if BGO fired for this addback event, veto if so
+            if (!suppAdd && add_hit->GetEnergy() > 15)
             {
-                add_hit = tigress->GetAddbackHit(i);
-                suppAdd = add_hit->BGOFired(); // check if BGO fired for this addback event, veto if so 
-                if (!suppAdd && add_hit->GetEnergy() > 15)
-                {
-                    tigAddDoppE->Fill(add_hit->GetDoppler(particle_betaDoppler));
-                }
-            } // End of tigress->GetAddbackMultiplicity()
-        
-
-
-
+                tigAddDoppE->Fill(add_hit->GetDoppler(particle_betaDoppler));
+            }
+        } // End of tigress->GetAddbackMultiplicity()
 
         //  ========================================== EMMA ======================================
         if (emma)
@@ -254,38 +246,52 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                 emmaPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y()); // Raw 2D pgac
                 emmaXpos->Fill(em_hit->GetPosition().X());                            // Pgac x position
                 emmaYpos->Fill(em_hit->GetPosition().Y());                            // pgac y position
-                
+
                 for (int j = 0; j < s3->GetPixelMultiplicity(); j++)
                 {
                     s3hit = s3->GetPixelHit(j);
-                    s3pos = s3hit->GetPosition(-101.25 * TMath::Pi() / 180., true); // rotation, s3 offset
-                    // s3pos.SetX(s3pos.X() + s3_x_offset);                            // these are all 0s, TODO: CONFIRM THIS 
-                    // s3pos.SetY(s3pos.Y() + s3_y_offset);
-                    // s3pos.SetZ(s3pos.Z() + s3_z_offset);
-                    s3EmmaTof->Fill(s3hit->GetTime() - em_hit->GetTime());  // EMMA-S3 TOF spectrum
-                    //EMMA - S3 Time gate: 
-                    if (s3hit->GetTime() - em_hit->GetTime() > s3_emma_T[0] && s3hit->GetTime() - em_hit->GetTime() < s3_emma_T[1]) 
+
+                    s3EmmaTof->Fill(s3hit->GetTime() - em_hit->GetTime()); // EMMA-S3 TOF spectrum
+                    // EMMA - S3 Time gate:
+                    if (s3hit->GetTime() - em_hit->GetTime() > s3_emma_T[0] && s3hit->GetTime() - em_hit->GetTime() < s3_emma_T[1])
                     {
-                        emmaS3TimeGatedPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y());   // EMMA-S3 time gated pgac 
-                        thetalab = s3pos.Theta(); // lab angle
-                        ekin = s3hit->GetEnergy(); // triton energy 
-                        exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2); // 26Mg Excitation energy, Energy conversion from keV to MeV (1e-3), two-body reaction 
-                        mg26ExcEmmaS3->Fill(exc); 
-
+                        emmaS3TimeGatedPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y()); // EMMA-S3 time gated pgac
                     }
-                }  
-            } // end of EMMA - S3
-            
+                }
+            } 
 
+
+            // EMMA - S3 Kinemtaics:
+            if (s3 && emma->GetMultiplicity() > 0)
+            {
+                for (int i = emma->GetMultiplicity(); i++)
+                {
+                    em_hit = emma->GetEmmaHit(i) for (int j = 0; j < s3->GetPixelMultiplicity(); j++)
+                    {
+                        s3hit = s3->GetPixelHit(j);
+                        s3pos = s3hit->GetPosition(-101.25 * TMath::Pi() / 180., true); // rotation, s3 offset
+                        // s3pos.SetX(s3pos.X() + s3_x_offset);                            // these are all 0s, TODO: CONFIRM THIS
+                        // s3pos.SetY(s3pos.Y() + s3_y_offset);
+                        // s3pos.SetZ(s3pos.Z() + s3_z_offset);
+                        if (s3hit->GetTime() - em_hit->GetTime() > s3_emma_T[0] && s3hit->GetTime() - em_hit->GetTime() < s3_emma_T[1])
+                        {
+                            thetalab = s3pos.Theta();                                                        // lab angle
+                            ekin = s3hit->GetEnergy();                                                       // triton energy
+                            exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);                              // 26Mg Excitation energy, Energy conversion from keV to MeV (1e-3), two-body reaction
+                            mg26ExcEmmaS3->Fill(exc);
+                        }
+                    }
+                }
+            }
 
             // ----------------------------------- IC -----------------------------------
             for (int i = 0; i < emma->GetICMultiplicity(); i++)
             {
                 ic_hit = emma->GetICHit(i);
-                emmaICSegmentEnergy[ic_hit->GetSegment()]->Fill(ic_hit->GetEnergy()); // 1D energy histogram for each IC segment 
+                emmaICSegmentEnergy[ic_hit->GetSegment()]->Fill(ic_hit->GetEnergy()); // 1D energy histogram for each IC segment
                 emmaICSegment->Fill(ic_hit->GetSegment(), ic_hit->GetEnergy());       // 2D energy graph for all 4 IC segments
-                tempIC += ic_hit->GetEnergy();                               // this is the total energy deposited in 4 IC segments
-                tempICArray[ic_hit->GetSegment() - 1] = ic_hit->GetEnergy(); // this is the energy deposited in each segment. Index 0 is IC seg 1 (GetSegment() returns 1,2,3...)
+                tempIC += ic_hit->GetEnergy();                                        // this is the total energy deposited in 4 IC segments
+                tempICArray[ic_hit->GetSegment() - 1] = ic_hit->GetEnergy();          // this is the energy deposited in each segment. Index 0 is IC seg 1 (GetSegment() returns 1,2,3...)
             }
 
             // IC and Si:
@@ -295,7 +301,6 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                 emmaICSumVSi->Fill(si_hit->GetEnergy(), tempIC);
                 emmaICSumVSiPlusIC->Fill(si_hit->GetEnergy() + tempIC, tempIC);
             }
-            
 
             // PID gated PGAC:
             for (int k = 0; k < emma->GetMultiplicity(); k++)
@@ -322,7 +327,6 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                     }
                 }
             }
-
 
             // EMMA - S3 - PID (UNFINISHED)
             tigress->ResetAddback();
@@ -380,7 +384,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
     emmaList->Write();
     myfile->cd();
 
-    // EMMA - S3 
+    // EMMA - S3
     TDirectory *emmaS3Dir = myfile->mkdir("EMMA-S3");
     emmaS3Dir->cd();
     emmaS3List->Write();

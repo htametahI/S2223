@@ -384,7 +384,8 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
               }
             }
           }
-        } // end of if tigress
+        }
+        // tigres->ResetAddback();
         tigress->ResetAddback();
         // --------------------------------------S3 ADDBACK BLOCK ENDS------------------------------------------------
       }

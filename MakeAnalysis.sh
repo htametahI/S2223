@@ -42,7 +42,7 @@ do
  if [ ! -f $AFILE ];  
   then
   echo "File $AFILE does not exist."
-    grsisort --recommended $f $CFILE --build-window 2500 --word-count-offset=0 --sort-depth 1000000000
+    grsisort --recommended --write-frag-tree $f $CFILE --build-window 2500 --word-count-offset=0 --sort-depth 1000000000
 #  grsisort --recommended $f $CFILE --build-window 100000 --word-count-offset=0 --sort-depth 1000000000
  else 
  if [ -f $AFILE ]
@@ -50,7 +50,7 @@ do
   if [ "$AFILE" -ot "$f" ];
    then
    echo "File $AFILE exists but is older than $f"
-   grsisort --recommended $f $CFILE --build-window 2500 --word-count-offset=0 --sort-depth 1000000000
+   grsisort --recommended --write-frag-tree $f $CFILE --build-window 2500 --word-count-offset=0 --sort-depth 1000000000
 #   grsisort --recommended $f $CFILE --build-window 100000 --word-count-offset=0 --sort-depth 1000000000
   fi
  fi

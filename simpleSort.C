@@ -1,9 +1,5 @@
-	#include "TEmma.h"
-	#include "TReaction.h"
-	
+
 	{	
-
-
 
 	double ekin; 
 	TVector3 *s3pos; 
@@ -16,6 +12,8 @@
 	oak->Add("~/S2223/AnalysisTrees/UsingCalibrationFilePostExperiment/analysis61000_000.root"); // change me!!
 	TS3 *s3 = 0;
 	oak->SetBranchAddress("TS3", &s3);
+	TEmma *emma = 0;
+	oak->SetBranchAddress("Emma", &emma); 
 	TChannel::ReadCalFile("CalibrationFilePostExperiment.cal"); // change me!!
 
 

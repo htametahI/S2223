@@ -1,4 +1,30 @@
 {
+#include <iostream>
+#include <iomanip>
+#include "TCutG.h"
+#include "TH1.h"
+#include "TF1.h"
+#include "TGraph.h"
+#include "TGraphErrors.h"
+#include "TTree.h"
+#include "TChain.h"
+#include "TH2.h"
+#include "TFile.h"
+#include "TDirectory.h"
+#include "TList.h"
+#include "TRandom.h"
+#include "TS3.h"
+#include "TS3Hit.h"
+#include "TReaction.h"
+#include "TSRIM.h"
+#include "TTigress.h"
+#include "TSpectrum.h"
+#include "TChannel.h"
+#include "TEmma.h"
+#include "TParserLibrary.h"
+#include "TEnv.h"
+using namespace std;
+
 	double ekin; 
 	TVector3 *s3pos; 
 	TS3Hit *s3hit; 
@@ -29,7 +55,7 @@
 
 	if (s3)
 	{
-		s3->SetMutiHit();
+		s3->SetMultiHit();
 		for (int i = 0; i < emma->GetMultiplicity(); i++)
 		{
 			em_hit = emma->GetEmmaHit(i);

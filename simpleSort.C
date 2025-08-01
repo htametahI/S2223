@@ -43,13 +43,10 @@
 			{
 				s3hit = s3->GetPixelHit(j);
 				s3pos = s3hit->GetPosition(-101.25 * TMath::Pi() / 180., true); // rotation, s3 offset
-				if (s3hit->GetTime() - em_hit->GetTime() > s3_emma_T[0] && s3hit->GetTime() - em_hit->GetTime() < s3_emma_T[1])
-				{
 					thetalab = s3pos.Theta();							// lab angle
 					ekin = s3hit->GetEnergy();							// triton energy
 					exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2); // 26Mg Excitation energy, Energy conversion from keV to MeV (1e-3), two-body reaction
 					mg26ExcEmmaS3->Fill(exc);
-				}
 			}
 		}
 	}

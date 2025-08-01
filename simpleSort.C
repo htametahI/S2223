@@ -2,7 +2,9 @@
 	{	
 
 	double ekin; 
-	TVector3 *s3pos; 
+	double thetalab; 
+	double exc; 
+	TVector3 s3pos; 
 	TS3Hit *s3hit; 
 	TEmmaHit *em_hit; 
 	double s3_emma_T[2] = {350, 620};      // S3-EMMA Timing

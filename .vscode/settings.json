@@ -3,7 +3,7 @@
     "kite.showWelcomeNotificationOnStartup": false,
     "git.autofetch": true,
     "editor.cursorBlinking": "smooth",
-    "workbench.colorTheme": "Visual Studio Dark - C++",
+    "workbench.colorTheme": "Default Dark+",
     "editor.fontFamily": "'Courier New', monospace",
     "editor.fontWeight": "600",
     "editor.fontLigatures": "'calt', 'liga', 'ss01', 'ss02', 'ss03', 'ss04', 'ss05', 'ss06', 'ss07', 'ss08', 'ss09'",

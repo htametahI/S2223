@@ -38,14 +38,14 @@
 		s3->SetMultiHit();
 		for (int i = 0; i < emma->GetMultiplicity(); i++)
 		{
-			em_hit = emma->GetEmmaHit(i);
+			auto em_hit = emma->GetEmmaHit(i);
 			for (int j = 0; j < s3->GetPixelMultiplicity(); j++)
 			{
-				s3hit = s3->GetPixelHit(j);
-				s3pos = s3hit->GetPosition(-101.25 * TMath::Pi() / 180., true); // rotation, s3 offset
-					thetalab = s3pos.Theta();							// lab angle
-					ekin = s3hit->GetEnergy();							// triton energy
-					exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2); // 26Mg Excitation energy, Energy conversion from keV to MeV (1e-3), two-body reaction
+				auto s3hit = s3->GetPixelHit(j);
+				auto s3pos = s3hit->GetPosition(-101.25 * TMath::Pi() / 180., true); // rotation, s3 offset
+					auto thetalab = s3pos.Theta();							// lab angle
+					auto ekin = s3hit->GetEnergy();							// triton energy
+					auto exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2); // 26Mg Excitation energy, Energy conversion from keV to MeV (1e-3), two-body reaction
 					mg26ExcEmmaS3->Fill(exc);
 			}
 		}

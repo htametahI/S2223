@@ -20,7 +20,7 @@
   oak->SetBranchAddress("TEmma", &emma);
   TChannel::ReadCalFile("CalibrationFilePostExperiment.cal"); // change me!!
 
-  TH1F *hist = new TH1F("hist", "hist;Energy (keV);Counts", 100, 0, 16384);
+  TH1F *hist = new TH1F("hist", "hist;Energy (keV);Counts", 200, 0, 16384);
   TH1F *mg26ExcEmmaS3 = new TH1F(
       "mg26Exc", "EMMA-S3 Gated 26Mg Excitation energy; Energy(MeV); Counts",
        230, -10, 13);

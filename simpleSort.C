@@ -27,12 +27,12 @@
 
   for (int i = 0; i < oak->GetEntries(); i++) {
     oak->GetEntry(i);
-    if (s3 && emma) {
-      for (int j = 0; j < s3->GetPixelMultiplicity(); j++) {
-        auto *s3_hit = s3->GetPixelHit(j);
-        hist->Fill(s3_hit->GetEnergy());
-    }
-    }
+    // if (s3 && emma) {
+    //   for (int j = 0; j < s3->GetPixelMultiplicity(); j++) {
+    //     auto *s3_hit = s3->GetPixelHit(j);
+    //     hist->Fill(s3_hit->GetEnergy());
+    //   }
+    // }
 
     if (s3) {
       s3->SetMultiHit();
@@ -40,6 +40,7 @@
         auto em_hit = emma->GetEmmaHit(i);
         for (int j = 0; j < s3->GetPixelMultiplicity(); j++) {
           s3hit = s3->GetPixelHit(j);
+          his->Fill(s3hit->GetEnergy());
           s3pos = s3hit->GetPosition(-101.25 * TMath::Pi() / 180.,
                                      true); // rotation, s3 offset
           thetalab = s3pos.Theta();         // lab angle

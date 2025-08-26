@@ -258,6 +258,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
     {
       for (int t = 0; t < tigress->GetMultiplicity(); t++)
       {
+        
         tig_hit = tigress->GetTigressHit(t);
         if (tig_hit != NULL)
         {

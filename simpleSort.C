@@ -23,14 +23,15 @@
   TH1F *hist = new TH1F("hist", "hist;Energy (keV);Counts", 16384, 0, 16384);
   TH1F *mg26ExcEmmaS3 = new TH1F(
       "mg26Exc", "EMMA-S3 Gated 26Mg Excitation energy; Energy(MeV); Counts",
-      230, -10, 13);
+       230, -10, 13);
 
   for (int i = 0; i < oak->GetEntries(); i++) {
     oak->GetEntry(i);
-
-    for (int j = 0; j < s3->GetPixelMultiplicity(); j++) {
-      auto *s3_hit = s3->GetPixelHit(j);
-      hist->Fill(s3_hit->GetEnergy());
+    if (s3 && emma) {
+      for (int j = 0; j < s3->GetPixelMultiplicity(); j++) {
+        auto *s3_hit = s3->GetPixelHit(j);
+        hist->Fill(s3_hit->GetEnergy());
+    }
     }
 
     if (s3) {
@@ -52,6 +53,7 @@
       }
     }
   }
+
 
   TFile *outFile = new TFile("test.root", "recreate"); // change me!!
   hist->Write();

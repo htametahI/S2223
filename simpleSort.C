@@ -56,10 +56,13 @@
       }
     }
   }
+  cout << "Entry " << analentries << " of " << analentries << " , 100% complete" << endl;
+  fflush(stdout);
 
 
   TFile *outFile = new TFile("test.root", "recreate"); // change me!!
-  hist->Write();
+  S3Energy->Write();
+  S3Charge->Write();
   mg26ExcEmmaS3->Write();
   outFile->Close();
 }

@@ -19,6 +19,7 @@
   TEmma *emma = 0;
   oak->SetBranchAddress("TEmma", &emma);
   TChannel::ReadCalFile("CalibrationFilePostExperiment.cal"); // change me!!
+  long analentries = oak->GetEntries();
 
   TH1F *S3Energy = new TH1F("S3 Energy", "S3 Energy;Energy (keV);Counts", 200, 0, 16384);
   TH1F *S3Charge = new TH1F("S3 Charge", "S3 Charge;Charge; Counts", 200, 0, 16384);
@@ -26,8 +27,10 @@
       "mg26Exc", "EMMA-S3 Gated 26Mg Excitation energy; Energy(MeV); Counts",
        230, -10, 13);
 
-  for (int i = 0; i < oak->GetEntries(); i++) {
+  for (int i = 0; i < analentries; i++) {
     oak->GetEntry(i);
+    if (i % 10000 == 0)
+            cout << setiosflags(ios::fixed) << "Entry " << jentry << " of " << analentries << ", " << 100 * jentry / analentries << "% complete" << "\r" << flush;
     // if (s3 && emma) {
     //   for (int j = 0; j < s3->GetPixelMultiplicity(); j++) {
     //     auto *s3_hit = s3->GetPixelHit(j);
@@ -56,8 +59,7 @@
       }
     }
   }
-  cout << "Entry " << analentries << " of " << analentries << " , 100% complete" << endl;
-  fflush(stdout);
+
 
 
   TFile *outFile = new TFile("test.root", "recreate"); // change me!!

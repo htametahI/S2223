@@ -20,7 +20,8 @@
   oak->SetBranchAddress("TEmma", &emma);
   TChannel::ReadCalFile("CalibrationFilePostExperiment.cal"); // change me!!
 
-  TH1F *hist = new TH1F("hist", "hist;Energy (keV);Counts", 200, 0, 16384);
+  TH1F *S3Energy = new TH1F("S3 Energy", "S3 Energy;Energy (keV);Counts", 200, 0, 16384);
+  TH1F *S3Charge = new TH1F("S3 Charge", "S3 Charge;Charge; Counts", 200, 0, 16384);
   TH1F *mg26ExcEmmaS3 = new TH1F(
       "mg26Exc", "EMMA-S3 Gated 26Mg Excitation energy; Energy(MeV); Counts",
        230, -10, 13);
@@ -40,7 +41,8 @@
         auto em_hit = emma->GetEmmaHit(i);
         for (int j = 0; j < s3->GetPixelMultiplicity(); j++) {
           s3hit = s3->GetPixelHit(j);
-          hist->Fill(s3hit->GetEnergy());
+          S3Energy->Fill(s3hit->GetEnergy());
+          S3Charge->Fill(s3hit->GetCharge());
           s3pos = s3hit->GetPosition(-101.25 * TMath::Pi() / 180.,
                                      true); // rotation, s3 offset
           thetalab = s3pos.Theta();         // lab angle

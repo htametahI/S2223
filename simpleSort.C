@@ -29,8 +29,6 @@
 
   for (int i = 0; i < analentries; i++) {
     oak->GetEntry(i);
-    if (i % 10000 == 0)
-            cout << setiosflags(ios::fixed) << "Entry " << jentry << " of " << analentries << ", " << 100 * jentry / analentries << "% complete" << "\r" << flush;
     // if (s3 && emma) {
     //   for (int j = 0; j < s3->GetPixelMultiplicity(); j++) {
     //     auto *s3_hit = s3->GetPixelHit(j);

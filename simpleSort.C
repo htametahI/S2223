@@ -46,6 +46,7 @@
           S3Charge->Fill(s3hit->GetCharge());
           s3pos = s3hit->GetPosition(-101.25 * TMath::Pi() / 180.,
                                      true); // rotation, s3 offset
+          s3pos = 0; 
           thetalab = s3pos.Theta();         // lab angle
           ekin = s3hit->GetEnergy();        // triton energy
           exc = reac->GetExcEnergy(
@@ -57,6 +58,8 @@
       }
     }
   }
+
+
 
 
 

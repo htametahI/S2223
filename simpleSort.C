@@ -13,7 +13,7 @@
       new TReaction("22Ne", "7Li", "3H", "26Mg", 64.14166, 0, true);
   TChain *oak = new TChain("AnalysisTree");
   oak->Add("~/S2223/AnalysisTrees/UsingCalibrationFilePostExperiment/"
-           "analysis61000_000.root"); // change me!!
+           "analysis610003_000.root"); // change me!!
   TS3 *s3 = 0;
   oak->SetBranchAddress("TS3", &s3);
   TEmma *emma = 0;
@@ -41,12 +41,12 @@
       for (int i = 0; i < emma->GetMultiplicity(); i++) {
         auto em_hit = emma->GetEmmaHit(i);
         for (int j = 0; j < s3->GetPixelMultiplicity(); j++) {
+          if (s3hit->GetTime() - em_hit->GetTime() > s3_emma_T[0] && s3hit->GetTime() - em_hit->GetTime() < s3_emma_T[1]) {
           s3hit = s3->GetPixelHit(j);
           S3Energy->Fill(s3hit->GetEnergy());
           S3Charge->Fill(s3hit->GetCharge());
           s3pos = s3hit->GetPosition(-101.25 * TMath::Pi() / 180.,
                                      true); // rotation, s3 offset
-          s3pos = 0; 
           thetalab = s3pos.Theta();         // lab angle
           ekin = s3hit->GetEnergy();        // triton energy
           exc = reac->GetExcEnergy(
@@ -54,13 +54,11 @@
               2); // 26Mg Excitation energy, Energy conversion from keV to MeV
                   // (1e-3), two-body reaction
           mg26ExcEmmaS3->Fill(exc);
+          }
         }
       }
     }
   }
-
-
-
 
 
   TFile *outFile = new TFile("test.root", "recreate"); // change me!!

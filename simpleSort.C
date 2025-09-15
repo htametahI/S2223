@@ -25,7 +25,7 @@
   TH1F *S3Charge = new TH1F("S3 Charge", "S3 Charge;Charge; Counts", 200, 0, 16384);
   TH1F *mg26ExcEmmaS3 = new TH1F(
       "mg26Exc", "EMMA-S3 Gated 26Mg Excitation energy; Energy(MeV); Counts",
-       230, -10, 13);
+       230, -10, 16);
 
   for (int i = 0; i < analentries; i++) {
     oak->GetEntry(i);

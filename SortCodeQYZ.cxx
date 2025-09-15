@@ -262,7 +262,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                         exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);
                         mg26ExcTimeGated->Fill(exc); 
                         if (tigress) {
-                            for (int k; k < tigress->GetAddbackMultiplicity(); k++) {
+                            for (int k = 0; k < tigress->GetAddbackMultiplicity(); k++) {
                                 add_hit = tigress->GetAddbackHit(k);
                                 gammaEx10p95->Fill(add_hit->GetDoppler(particle_beta)); 
                             }

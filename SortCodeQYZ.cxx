@@ -265,8 +265,8 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                             for (int k = 0; k < tigress->GetAddbackMultiplicity(); k++) {
                                 add_hit = tigress->GetAddbackHit(k);
                                 gammaExc->Fill(add_hit->GetDoppler(particle_beta)); 
-                                if (exc > 10.925 && exc < 10.975) gammaExc10p9->Fill(add_hit->GetDoppler(particle_beta));
-                                if (exc > 11.145 && exc < 11.195) gammaExc11p09->Fill(add_hit->GetDoppler(particle_beta));
+                               // if (exc > 10.925 && exc < 10.975) gammaExc10p9->Fill(add_hit->GetDoppler(particle_beta));
+                               // if (exc > 11.145 && exc < 11.195) gammaExc11p09->Fill(add_hit->GetDoppler(particle_beta));
                             }
                         }
                         tigress->ResetAddback(); 

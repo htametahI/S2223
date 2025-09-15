@@ -269,6 +269,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                                 if (exc > 11.145 && exc < 11.195) gammaExc11p09->Fill(add_hit->GetDoppler(particle_beta));
                             }
                         }
+                        tigress->ResetAddback(); 
                     }
                 }
             } 

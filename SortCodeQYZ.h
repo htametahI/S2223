@@ -40,7 +40,7 @@ TH2F *emmaPgac,  *emmaPIDGatedPgac;
 
 // EMMA - S3 
 TH2F *emmaS3TimeGatedPgac; 
-TH1F *mg26ExcEmmaS3, *mg26ExcPIDGated, TH1F *mg26ExcTimeGated;
+TH1F *mg26ExcEmmaS3, *mg26ExcPIDGated, *mg26ExcTimeGated;
 
 // IC
 TH1F *emmaICSegmentEnergy[5];

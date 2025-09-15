@@ -13,7 +13,7 @@
       new TReaction("22Ne", "7Li", "3H", "26Mg", 64.14166, 0, true);
   TChain *oak = new TChain("AnalysisTree");
   oak->Add("~/S2223/AnalysisTrees/UsingCalibrationFilePostExperiment/"
-           "analysis610003_000.root"); // change me!!
+           "analysis61000_000.root"); // change me!!
   TS3 *s3 = 0;
   oak->SetBranchAddress("TS3", &s3);
   TEmma *emma = 0;

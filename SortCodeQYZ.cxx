@@ -261,6 +261,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                         ekin = s3hit->GetEnergy();
                         exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);
                         mg26ExcTimeGated->Fill(exc); 
+                        tigress->ResetAddback(); 
                         if (tigress) {
                             for (int k = 0; k < tigress->GetAddbackMultiplicity(); k++) {
                                 add_hit = tigress->GetAddbackHit(k);

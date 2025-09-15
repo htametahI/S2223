@@ -91,6 +91,8 @@ void SortCode::Initialise()
 	tigList->Add(tigE);
 	tigAddDoppE = new TH1F("tigAddDoppE", "Tigress Addback Doppler Corrected Energy;Energy (keV);Counts", 2000, 0, 4500);
 	tigList->Add(tigAddDoppE);
+	gammaExc = new TH1F("tigExc", "Tigress Addback Doppler Corrected Spectrum; Counts", 500, 0, 4500);
+	tigList->Add(gammaExc); 
 	gammaExc10p9 = new TH1F("tigExc10p9", "Tigress Addback Doppler Gated on 10.9MeV Excitation Energy; Counts", 500, 0, 4500);
 	tigList->Add(gammaExc10p9); 
 	gammaExc11p09 = new TH1F("tigExc11p09", "Tigress Addback Doppler Gated on 11.09MeV Excitation Energy; Counts", 500, 0, 4500); 

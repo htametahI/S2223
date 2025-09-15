@@ -133,7 +133,7 @@ void SortCode::Initialise()
 	emmaS3List->Add(emmaS3TimeGatedPgac);
 	mg26ExcEmmaS3 = new TH1F("mg26Exc", "EMMA-S3 Gated 26Mg Excitation energy; Energy(MeV); Counts", 160, 0, 16);
 	emmaS3List->Add(mg26ExcEmmaS3);
-	mg26ExcPIDGated = new TH1F("mg26ExcPID", "Mg-26 Excitation Energy PID Gated; Counts", 160, 0, 16)
+	mg26ExcPIDGated = new TH1F("mg26ExcPID", "Mg-26 Excitation Energy PID Gated; Counts", 160, 0, 16);
 	emmaS3List->Add(mg26ExcPIDGated);
 
 	// TOF

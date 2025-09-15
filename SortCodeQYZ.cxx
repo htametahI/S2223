@@ -250,13 +250,17 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                 for (int j = 0; j < s3->GetPixelMultiplicity(); j++)
                 {
                     s3hit = s3->GetPixelHit(j);
-
                     s3EmmaTof->Fill(s3hit->GetTime() - em_hit->GetTime()); // EMMA-S3 TOF spectrum
                     // EMMA - S3 Time gate:
                     if (s3hit->GetTime() - em_hit->GetTime() > s3_emma_T[0] && s3hit->GetTime() - em_hit->GetTime() < s3_emma_T[1])
                     {
                         emmaS3TimeGatedPgac->Fill(em_hit->GetPosition().X(), em_hit->GetPosition().Y()); // EMMA-S3 time gated pgac
                         // cout << "\nmade it after emma gated pgac" << endl; 
+                        s3pos = s3hit->GetPosition(-101.25 * TMath::Pi() / 180., true);
+                        thetalab = s3pos.Theta();
+                        ekin = s3hit->GetEnergy();
+                        exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);
+                        mg26ExcTimeGated->Fill(exc); 
                     }
                 }
             } 

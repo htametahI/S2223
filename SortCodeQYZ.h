@@ -40,7 +40,7 @@ TH2F *emmaPgac,  *emmaPIDGatedPgac;
 
 // EMMA - S3 
 TH2F *emmaS3TimeGatedPgac; 
-TH1F *mg26ExcEmmaS3;
+TH1F *mg26ExcEmmaS3, *mg26ExcPIDGated;
 
 // IC
 TH1F *emmaICSegmentEnergy[5];
@@ -131,8 +131,10 @@ void SortCode::Initialise()
 	// EMMA - S3 
 	emmaS3TimeGatedPgac = new TH2F("emmaS3TimeGatedPgac", "PGAC Time Gated Hit Pattern", 160, -80, 80, 120, -60, 60);
 	emmaS3List->Add(emmaS3TimeGatedPgac);
-	mg26ExcEmmaS3 = new TH1F("mg26Exc", "EMMA-S3 Gated 26Mg Excitation energy; Energy(MeV); Counts", 130, 0, 13);
+	mg26ExcEmmaS3 = new TH1F("mg26Exc", "EMMA-S3 Gated 26Mg Excitation energy; Energy(MeV); Counts", 160, 0, 16);
 	emmaS3List->Add(mg26ExcEmmaS3);
+	mg26ExcPIDGated = new TH1F("mg26ExcPID", "Mg-26 Excitation Energy PID Gated; Counts", 160, 0, 16)
+	emmaS3List->Add(mg26ExcPIDGated);
 
 	// TOF
 	s3EmmaTof = new TH1F("s3EmmaTof", "S3 EMMA TOF; S3 EMMA Time Difference(ns);", 20000, -10000, 10000);

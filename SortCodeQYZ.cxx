@@ -269,6 +269,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                                 gammaExc->Fill(add_hit->GetDoppler(particle_beta)); 
                                 if (exc > 10.62 && exc < 11.09) gammaExc10p9->Fill(add_hit->GetDoppler(particle_beta));
                                 if (exc > 11.09 && exc < 11.50) gammaExc11p09->Fill(add_hit->GetDoppler(particle_beta));
+                                
                             }
                         }
 
@@ -368,7 +369,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                         ekin = s3hit->GetEnergy();
                         exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);
                         mg26ExcPIDGated->Fill(exc); 
-                        for (int k; k < tigress->GetAddbackMultiplicity(); k++)
+                        for (int k = 0; k < tigress->GetAddbackMultiplicity(); k++)
                         {
                             cout << "here" << endl;
                             add_hit = tigress->GetAddbackHit(k);

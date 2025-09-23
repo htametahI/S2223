@@ -32,7 +32,7 @@
   TH1F *mg26Exc1808 = new TH1F("Exc1808", "Exc gated on 1808; Counts", 150, 0, 15);
   TH1F *tigEng = new TH1F("tigEng", "tigress energy;Counts", 200, 0, 16384); 
 
-  for (int i = 0; o < analentries; o++) {
+  for (int o = 0; o < analentries; o++) {
     oak->GetEntry(o);
     if (emma) {
       if (s3) {

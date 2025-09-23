@@ -347,6 +347,32 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                     }
                 }
             }
+            
+            // ========================= REVERSE GATING EXC ==========================
+            for (int i = 0; i < emma->GetSiMultiplicity(); i++)
+            {
+                si_hit = emma->GetSiHit(i);
+                if (Mg26_cut->IsInside(si_hit->GetEnergy(), tempIC))
+                {
+                    for (int j = 0; j < tigress->GetAddbackMultiplicity(; j++)) 
+                    {
+                        add_hit = tigress->GetAddbackHit(j); 
+                        if (add_hit->GetDoppler(particle_beta) > 1785 && add_hit->GetDoppler(particle_beta) < 1850)
+                        {
+                            for (int k = 0; k < s3->GetPixelMultiplicity(); k++)
+                            {
+                                s3hit = s3->GetPixelHit(k); 
+                                s3pos = s3hit->GetPosition(-101.25 * TMath::Pi() / 180., true);
+                                thetalab = s3pos.Theta();
+                                ekin = s3hit->GetEnergy();
+                                exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);
+                                mg26Exc1808keV->Fill(exc); 
+                            }
+                        }
+                    }
+                }
+
+            }
 
             
             
@@ -372,7 +398,6 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                         for (int k = 0; k < tigress->GetAddbackMultiplicity(); k++)
                         {
                             add_hit = tigress->GetAddbackHit(k);
-                            
                             addDopp26MgPIDS3T->Fill(add_hit->GetDoppler(particle_betaDoppler));
                             if (exc > 10.62 && exc < 11.09) gammaExc10p9->Fill(add_hit->GetDoppler(particle_beta));
                             if (exc > 11.09 && exc < 11.50) gammaExc11p09->Fill(add_hit->GetDoppler(particle_beta));

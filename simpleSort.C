@@ -17,6 +17,8 @@
            "analysis61000_000.root"); // change me!!
   TS3 *s3 = 0;
   oak->SetBranchAddress("TS3", &s3);
+  TTigress *tigress = 0; 
+  oak->SetBranchAddress("TTigress", &tigress); 
   TEmma *emma = 0;
   oak->SetBranchAddress("TEmma", &emma);
   TChannel::ReadCalFile("CalibrationFilePostExperiment.cal"); // change me!!
@@ -30,8 +32,8 @@
   TH1F *mg26Exc1808 = new TH1F("Exc1808", "Exc gated on 1808; Counts", 150, 0, 15);
   TH1F *tigEng = new TH1F("tigEng", "tigress energy;Counts", 200, 0, 16384); 
 
-  for (int i = 0; i < analentries; i++) {
-    oak->GetEntry(i);
+  for (int i = 0; o < analentries; o++) {
+    oak->GetEntry(o);
     if (emma) {
       if (s3) {
         for (int i = 0; i < emma->GetSiMultiplicity(); i++) {
@@ -53,6 +55,7 @@
         }
       }
     }
+  }
 
 
   TFile *outFile = new TFile("test.root", "recreate"); // change me!!

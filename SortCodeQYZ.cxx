@@ -354,7 +354,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                 si_hit = emma->GetSiHit(i);
                 if (Mg26_cut->IsInside(si_hit->GetEnergy(), tempIC))
                 {
-                    for (int j = 0; j < tigress->GetAddbackMultiplicity(; j++)) 
+                    for (int j = 0; j < tigress->GetAddbackMultiplicity(); j++)
                     {
                         add_hit = tigress->GetAddbackHit(j); 
                         if (add_hit->GetDoppler(particle_beta) > 1785 && add_hit->GetDoppler(particle_beta) < 1850)

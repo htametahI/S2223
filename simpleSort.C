@@ -7,6 +7,7 @@
   TVector3 s3pos;
   TS3Hit *s3hit;
   TEmmaHit *em_hit;
+  TTigressHit *add_hit; 
   double s3_emma_T[2] = {350, 620}; // S3-EMMA Timing
   double particle_beta = 0.0681;
   TReaction *reac =
@@ -26,38 +27,32 @@
   TH1F *mg26ExcEmmaS3 = new TH1F(
       "mg26Exc", "EMMA-S3 Gated 26Mg Excitation energy; Energy(MeV); Counts",
        230, -10, 16);
+  TH1F *mg26Exc1808 = new TH1F("Exc1808", "Exc gated on 1808; Counts", 150, 0, 15);
+  TH1F *tigEng = new TH1F("tigEng", "tigress energy;Counts", 200, 0, 16384); 
 
   for (int i = 0; i < analentries; i++) {
     oak->GetEntry(i);
-    // if (s3 && emma) {
-    //   for (int j = 0; j < s3->GetPixelMultiplicity(); j++) {
-    //     auto *s3_hit = s3->GetPixelHit(j);
-    //     hist->Fill(s3_hit->GetEnergy());
-    //   }
-    // }
-
-    if (s3) {
-      s3->SetMultiHit();
-      for (int i = 0; i < emma->GetMultiplicity(); i++) {
-        auto em_hit = emma->GetEmmaHit(i);
-        for (int j = 0; j < s3->GetPixelMultiplicity(); j++) {
-          s3hit = s3->GetPixelHit(j);
-          if (s3hit->GetTime() - em_hit->GetTime() > s3_emma_T[0] && s3hit->GetTime() - em_hit->GetTime() < s3_emma_T[1]) {
-          S3Energy->Fill(s3hit->GetEnergy());
-          s3pos = s3hit->GetPosition(-101.25 * TMath::Pi() / 180.,
-                                     true); // rotation, s3 offset
-          thetalab = s3pos.Theta();         // lab angle
-          ekin = s3hit->GetEnergy();        // triton energy
-          exc = reac->GetExcEnergy(
-              ekin * 1e-3, thetalab,
-              2); // 26Mg Excitation energy, Energy conversion from keV to MeV
-                  // (1e-3), two-body reaction
-          mg26ExcEmmaS3->Fill(exc);
-          }
+    if (emma) {
+      if (s3) {
+        for (int i = 0; i < emma->GetSiMultiplicity(); i++) {
+          em_hit = emma->GetSiHit(i);
+            for (int k = 0; k < tigress->GetAddbackMultiplicity(); k++) {
+              add_hit = tigress->GetAddbackHit(k); 
+              tigEng->Fill(add_hit->GetDoppler(particle_beta)); 
+              if (add_hit->GetDoppler(particle_beta) > 1785 && add_hit->GetDoppler(particle_beta) < 1850) {
+                for (j = 0; j < s3->GetPixelMultiplicity(); j++) {
+                  s3hit = s3->GetPixelHit(j); 
+                  s3pos = s3hit->GetPosition(-101.25 * TMath::Pi() / 180., true);
+                  thetalab = s3pos.Theta();
+                  ekin = s3hit->GetEnergy();
+                  exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);
+                  mg26Exc1808->Fill(exc); 
+                }
+              }
+            }
         }
       }
     }
-  }
 
 
   TFile *outFile = new TFile("test.root", "recreate"); // change me!!

@@ -40,7 +40,7 @@
               add_hit = tigress->GetAddbackHit(k); 
               tigEng->Fill(add_hit->GetDoppler(particle_beta)); 
               if (add_hit->GetDoppler(particle_beta) > 1785 && add_hit->GetDoppler(particle_beta) < 1850) {
-                for (j = 0; j < s3->GetPixelMultiplicity(); j++) {
+                for (int j = 0; j < s3->GetPixelMultiplicity(); j++) {
                   s3hit = s3->GetPixelHit(j); 
                   s3pos = s3hit->GetPosition(-101.25 * TMath::Pi() / 180., true);
                   thetalab = s3pos.Theta();

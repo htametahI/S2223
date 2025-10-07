@@ -400,8 +400,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                         {
                             add_hit = tigress->GetAddbackHit(k);
                             addDopp26MgPIDS3T->Fill(add_hit->GetDoppler(particle_betaDoppler));
-                            if (exc > 10.62 && exc < 11.09) gammaExc10p9->Fill(add_hit->GetDoppler(particle_beta));
-                            if (exc > 11.09 && exc < 11.50) gammaExc11p09->Fill(add_hit->GetDoppler(particle_beta));
+                            if (exc > 10.62 && exc < 12) gammaExc10p9->Fill(add_hit->GetDoppler(particle_beta));
                         }
                         tigress->ResetAddback();
                     }

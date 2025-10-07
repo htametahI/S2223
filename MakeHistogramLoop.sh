@@ -8,7 +8,7 @@ ADIR=/home/mikeqiu/S2223/AnalysisTrees/UsingCalibrationFilePostExperiment
 HISTDIR=HistFiles/
 
 DLEN=${#ADIR}
-SORTCODE=SortCode/SortTigress2
+SORTCODE=SortTigress2
 #SORTCODE=SortCode/Clock
 
 #CFILE=Calibrations/EnCal/Calibration_Quadratic.cal

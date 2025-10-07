@@ -68,8 +68,6 @@ double gamma_1808_E[2] = {1805, 1830}; // 1808=keV gamma 26Mg
 double tempIC;
 double tempICArray[4];
 double tempIC2D[5][4];
-double s3_phi_offset = -90.0*TMath::Pi()/180.;
-s3_phi_offset -= TMath::Pi()/16.;
 double s3_x_offset = -0.0; // S3 x offset (mm) will need to be recalculated with beam
 double s3_y_offset = -0.0; // S3 y offset (mm) will need to be recalculated with beam
 double s3_z_offset = 0.0;  // S3 z offset (mm) will need to be calculated.

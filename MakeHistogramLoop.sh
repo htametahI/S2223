@@ -5,7 +5,7 @@
 ADIR=/home/mikeqiu/S2223/AnalysisTrees/UsingCalibrationFilePostExperiment
 
 #HISTDIR=HistFiles
-HISTDIR=HistFiles/
+HISTDIR=HistFiles
 
 DLEN=${#ADIR}
 SORTCODE=SortTigress2

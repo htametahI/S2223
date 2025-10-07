@@ -1,68 +1,72 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
+shopt -s nullglob
 
-#ADIR=AnalysisTrees
-#ADIR=/mnt/g/Backups/2024_TRIUMF_S2223/S2223
-ADIR=/home/mikeqiu/S2223/AnalysisTrees/UsingCalibrationFilePostExperiment
+ADIR="/home/mikeqiu/S2223/AnalysisTrees/UsingCalibrationFilePostExperiment"
+HISTDIR="HistFiles"
 
-#HISTDIR=HistFiles
-HISTDIR=HistFiles
+# Use absolute path to the sorter
+SORTCODE="/home/mikeqiu/S2223/SortTigress2"
+CFILE="CalibrationFilePostExperiment.cal"
 
-DLEN=${#ADIR}
-SORTCODE=/home/mikeqiu/S2223/SortTigress2
-#SORTCODE=SortCode/Clock
+m=60647
+n=1000000
+RUNLIST="runs_good.txt"
 
-#CFILE=Calibrations/EnCal/Calibration_Quadratic.cal
-#CFILE=alphacalibrations/CalibrationFile.cal
-#CFILE=backups/20241118_CalibrationFile.cal
+# Checks
+[[ -f "$RUNLIST" ]] || { echo "Run list '$RUNLIST' not found." >&2; exit 1; }
+mkdir -p "$HISTDIR"
+command -v hadd >/dev/null || { echo "ERROR: 'hadd' not found in PATH (ROOT not set up?)." >&2; exit 1; }
+[[ -x "$SORTCODE" ]] || { echo "ERROR: SORTCODE not executable: $SORTCODE" >&2; exit 1; }
+[[ -f "$CFILE" ]] || { echo "ERROR: calibration file not found: $CFILE" >&2; exit 1; }
 
-#CFILE=Calibrations/CalibrationFile.cal
-#CFILE=Calibrations/CalibrationFile_cam.cal
-#CFILE=Calibrations/20241203_calibrationfile.cal
-#CFILE=Calibrations/20241204_calibrationfile.cal
-#CFILE=Calibrations/20241205_calibrationfile.cal
-#CFILE=Calibrations/CalibrationFile20250307.cal
-CFILE=CalibrationFilePostExperiment.cal
+all_run_outputs=()  # to optionally merge across runs at the end
 
-TARGET=three
-m=60647 #Only Sort after this run
-n=1000000 #Only Sort until this run 
+while IFS= read -r line || [[ -n "$line" ]]; do
+  runnum="${line#"${line%%[![:space:]]*}"}"
+  runnum="${runnum%"${runnum##*[![:space:]]}"}"
+  [[ -z "$runnum" || "$runnum" =~ ^# ]] && continue
+  [[ "$runnum" =~ ^[0-9]+$ ]] || { echo "Skipping non-numeric run: '$runnum'"; continue; }
 
-RUNLIST=runs_good.txt # File containing run numbers
+  if (( runnum > m && runnum < n )); then
+    echo "== Processing run $runnum =="
 
-# Check if run list exists
-if [ ! -f "$RUNLIST" ]; then
-  echo "Run list file '$RUNLIST' not found. Exiting."
-  exit 1
-fi
+    sub_outputs=()
+    for f in "$ADIR"/analysis"${runnum}"_*.root; do
+      [[ -f "$f" ]] || continue
 
-if [ ! -d $HISTDIR ]; then
-  mkdir $HISTDIR
-fi
+      base="$(basename "$f" .root)"             # e.g., analysis60648_003
+      out="$HISTDIR/Hist_${base}.root"          # per-subrun output
 
-# Open runlist on FD 3 to avoid conflict with stdin
-exec 3< "$RUNLIST"
-
-while read -r runnum <&3; do
-
-  if [[ -z "$runnum" || "$runnum" =~ ^# ]]; then # skip if empty or comment line
-    continue
-  fi
-
-  if [ "$runnum" -gt "$m" ] && [ "$n" -gt "$runnum" ]; then
-    for f in $ADIR/analysis${runnum}_*.root; do 
-      if [ -f "$f" ]; then
-        g=${f:DLEN+9}
-        h=${g:0:${#g}-5} 
-        #i=${g:0:${#g}-9}
-        #echo "$i"
-
-        HFILE=$HISTDIR/Hist_$h.root
-        echo "$SORTCODE $f $CFILE $HFILE"
-        $SORTCODE "$f" "$CFILE" "$HFILE" 
-      fi
+      echo "$SORTCODE" "$f" "$CFILE" "$out"
+      "$SORTCODE" "$f" "$CFILE" "$out"
+      sub_outputs+=("$out")
     done
-  fi
-done 
 
-exec 3<&-  # Close FD 3
-echo "Finished looping through run list"
+    if ((${#sub_outputs[@]} == 0)); then
+      echo "No subruns found for run $runnum"
+      continue
+    fi
+
+    merged_run="$HISTDIR/Hist_run${runnum}.root"
+    if ((${#sub_outputs[@]} == 1)); then
+      # Single subrun -> just copy to the per-run merged name
+      cp -f "${sub_outputs[0]}" "$merged_run"
+    else
+      # Merge (sum) histograms across subruns for this run
+      echo "Merging ${#sub_outputs[@]} files -> $merged_run"
+      hadd -f "$merged_run" "${sub_outputs[@]}"
+    fi
+
+    all_run_outputs+=("$merged_run")
+  fi
+done < "$RUNLIST"
+
+# Optional: merge across all runs into one big file
+if ((${#all_run_outputs[@]} > 1)); then
+  mega="$HISTDIR/Hist_all_runs.root"
+  echo "Merging all runs (${#all_run_outputs[@]}) -> $mega"
+  hadd -f "$mega" "${all_run_outputs[@]}"
+fi
+
+echo "Finished."

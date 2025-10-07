@@ -198,6 +198,10 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
             {
                 s3hit = s3->GetPixelHit(i);
                 s3E->Fill(s3hit->GetEnergy());
+                s3pos = s3hit->GetPosition(s3_phi_offset, true);
+                thetalab = s3pos.Theta();
+                s3ETheta->Fill(thetalab*r2d, s3hit->GetEnergy()); 
+                
             }
         }
 
@@ -394,7 +398,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                         // if (s3hit->GetTime() - si_hit->GetTime() > s3_emma_T[0] && s3hit->GetTime() - si_hit->GetTime() < s3_emma_T[1] && tigress)
                         s3pos = s3hit->GetPosition(s3_phi_offset, true);
                         thetalab = s3pos.Theta();
-                        s3ETheta->Fill(thetalab*r2d, s3hit->GetEnergy()); 
+                        s3EThetaPID->Fill(thetalab*r2d, s3hit->GetEnergy()); 
                         ekin = s3hit->GetEnergy();
                         exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);
                         mg26ExcPIDGated->Fill(exc); 

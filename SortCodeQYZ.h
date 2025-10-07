@@ -144,7 +144,7 @@ void SortCode::Initialise()
 	emmaS3List->Add(mg26ExcPIDGated);
 	mg26ExcTimeGated = new TH1F("mg26ExcTime", "Mg-26 Excitation Energy Time Gated; Counts", 100, 0, 16);
 	emmaS3List->Add(mg26ExcTimeGated);
-	mg26Exc1808keV = new TH1F("mg26Exc1808keV", "Mg-26 Excitation Energy 1808keV Gated; Counts", 100, 0, 16); 
+	mg26Exc1808keV = new TH1F("mg26Exc1808keV", "Mg-26 Excitation Energy 1808keV Gated; Counts", 500, 0, 16); 
 	emmaS3List->Add(mg26Exc1808keV); 
 
 	// TOF

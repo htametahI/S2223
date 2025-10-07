@@ -26,6 +26,7 @@ if [[ -e $SUM_ALL_FILE ]]; then
   fi
 fi 
 
+
 # loading all runs in FILE_LIST
 FILE_LIST=() # Clear the array before use
 for run in $(seq $firstrun $lastrun) ; do

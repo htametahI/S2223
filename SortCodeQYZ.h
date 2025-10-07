@@ -48,7 +48,7 @@ TH2F *emmaICSegment;
 
 // S3
 TH1F *s3E, *s3RingsSectorsSinglesT, *s3RingCounts, *s3SecCounts, *s3Rate;
-TH2F *s3Rings, *s3Sectors, *s3RingsT, *s3SectorsT, *siETheta, *s3Hitmap, *s3RingsSectors;
+TH2F *s3Rings, *s3Sectors, *s3RingsT, *s3SectorsT, *siETheta, *s3Hitmap, *s3RingsSectors, *s3ETheta;
 
 // TOF
 TH1F *s3EmmaTof, *ssbICTof, *ssbSiTof, *tigICTof, *tigAnodeTof;
@@ -134,6 +134,8 @@ void SortCode::Initialise()
 	s3List->Add(s3RingsSectors);
 	s3RingsSectorsSinglesT = new TH1F("s3RingsSectorsSinglesT", "S3 sectorT vs ringT Multiplicity 1;Sector Time - Ring Time", 2048, -1024, 1024);
 	s3RingsSectorsSinglesT->Add(s3RingsSectorsSinglesT);
+	s3ETheta = new TH2F("s3ETheta", "S3 Energy vs Lab Angle;Lab Angle; S3 Energy", 180, 0, 180, 10000, 0, 10000);
+	s3List->Add(s3ETheta);
 
 	// EMMA - S3 
 	emmaS3TimeGatedPgac = new TH2F("emmaS3TimeGatedPgac", "PGAC Time Gated Hit Pattern", 160, -80, 80, 120, -60, 60);

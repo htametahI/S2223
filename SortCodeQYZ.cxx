@@ -357,7 +357,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                     for (int j = 0; j < tigress->GetAddbackMultiplicity(); j++)
                     {
                         add_hit = tigress->GetAddbackHit(j); 
-                        if (add_hit->GetDoppler(particle_beta) > 1785 && add_hit->GetDoppler(particle_beta) < 1850)
+                        if (add_hit->GetDoppler(particle_beta) > 1805 && add_hit->GetDoppler(particle_beta) < 1825)
                         {
                             for (int k = 0; k < s3->GetPixelMultiplicity(); k++)
                             {

@@ -1,49 +1,72 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
+shopt -s nullglob
 
-declare -a FILE_LIST # array to hold file names
-HIST_DIR=$1
+ADIR="/home/mikeqiu/S2223/AnalysisTrees/UsingCalibrationFilePostExperiment"
+HISTDIR="HistFiles"
 
-firstrun=0
-lastrun=1000000
+# Use absolute path to the sorter
+SORTCODE="/home/mikeqiu/S2223/SortTigress2"
+CFILE="CalibrationFilePostExperiment.cal"
 
-if [ $# -lt 3 ]; then 
-  echo "Sums all run histograms into single file"
-  echo "usage $0 HistDir <first run> <last run>"
-  exit
+m=60647
+n=1000000
+RUNLIST="runs_good.txt"
+
+# Checks
+[[ -f "$RUNLIST" ]] || { echo "Run list '$RUNLIST' not found." >&2; exit 1; }
+mkdir -p "$HISTDIR"
+command -v hadd >/dev/null || { echo "ERROR: 'hadd' not found in PATH (ROOT not set up?)." >&2; exit 1; }
+[[ -x "$SORTCODE" ]] || { echo "ERROR: SORTCODE not executable: $SORTCODE" >&2; exit 1; }
+[[ -f "$CFILE" ]] || { echo "ERROR: calibration file not found: $CFILE" >&2; exit 1; }
+
+all_run_outputs=()  # to optionally merge across runs at the end
+
+while IFS= read -r line || [[ -n "$line" ]]; do
+  runnum="${line#"${line%%[![:space:]]*}"}"
+  runnum="${runnum%"${runnum##*[![:space:]]}"}"
+  [[ -z "$runnum" || "$runnum" =~ ^# ]] && continue
+  [[ "$runnum" =~ ^[0-9]+$ ]] || { echo "Skipping non-numeric run: '$runnum'"; continue; }
+
+  if (( runnum > m && runnum < n )); then
+    echo "== Processing run $runnum =="
+
+    sub_outputs=()
+    for f in "$ADIR"/analysis"${runnum}"_*.root; do
+      [[ -f "$f" ]] || continue
+
+      base="$(basename "$f" .root)"             # e.g., analysis60648_003
+      out="$HISTDIR/Hist_${base}.root"          # per-subrun output
+
+      echo "$SORTCODE" "$f" "$CFILE" "$out"
+      "$SORTCODE" "$f" "$CFILE" "$out"
+      sub_outputs+=("$out")
+    done
+
+    if ((${#sub_outputs[@]} == 0)); then
+      echo "No subruns found for run $runnum"
+      continue
+    fi
+
+    merged_run="$HISTDIR/Hist_run${runnum}.root"
+    if ((${#sub_outputs[@]} == 1)); then
+      # Single subrun -> just copy to the per-run merged name
+      cp -f "${sub_outputs[0]}" "$merged_run"
+    else
+      # Merge (sum) histograms across subruns for this run
+      echo "Merging ${#sub_outputs[@]} files -> $merged_run"
+      hadd -f "$merged_run" "${sub_outputs[@]}"
+    fi
+
+    all_run_outputs+=("$merged_run")
+  fi
+done < "$RUNLIST"
+
+# Optional: merge across all runs into one big file
+if ((${#all_run_outputs[@]} > 1)); then
+  mega="$HISTDIR/Hist_all_runs.root"
+  echo "Merging all runs (${#all_run_outputs[@]}) -> $mega"
+  hadd -f "$mega" "${all_run_outputs[@]}"
 fi
 
-firstrun=$2
-lastrun=$3
-
-SUM_ALL_FILE="$HIST_DIR/Runs_${firstrun}-${lastrun}.root"
-
-# Check if the summed file already exists
-if [[ -e $SUM_ALL_FILE ]]; then 
-  read -p "$SUM_ALL_FILE already exists! Overwrite? (y/N): " confirm
-  if [[ $confirm != "y" && $confirm != "Y" ]]; then
-    echo "Skipping sum of all runs."
-    exit
-  fi
-fi 
-
-
-# loading all runs in FILE_LIST
-FILE_LIST=() # Clear the array before use
-for run in $(seq $firstrun $lastrun) ; do
-  SUM_FILE="$HIST_DIR/Sum_${run}.root"
-  if [ -e "$SUM_FILE" ]; then
-    FILE_LIST+=("$SUM_FILE")
-  fi
-done
-
-# sum all runs into single .root file
-if [ ${#FILE_LIST[@]} -ne 0 ]; then
-  echo "::: Summing runs for $firstrun to $lastrun ..."
-  echo ""
-  echo "hadd -f \"$SUM_ALL_FILE\" \"${FILE_LIST[@]}\""
-  hadd -f "$SUM_ALL_FILE" "${FILE_LIST[@]}"
-  echo ""
-  echo "::: Summing runs for $firstrun to $lastrun ... [Done]"
-else
-  echo "No valid Sum_*.root files found for the given range. Exiting."
-fi
+echo "Finished."

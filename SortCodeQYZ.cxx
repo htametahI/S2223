@@ -134,7 +134,8 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
     // ====== Energy lost already calculated in LISE++ ==================
     double EBeam = 64.14166; // Beam energy half way into the target
 
-    TReaction *reac = new TReaction("22Ne", "7Li", "3H", "26Mg", 64.14166, 0, true);
+    //TReaction *reac = new TReaction("22Ne", "7Li", "3H", "26Mg", 64.14166, 0, true);
+    TReaction *reac = new TReaction("7Li", "22Ne", "22Ne", "3H", 64.14166, 0, true);
 
     // Defining Pointers
     TEmmaHit *em_hit, *ic_hit, *si_hit, *ssb_hit, *trigger_hit, *anode_hit;
@@ -379,8 +380,6 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                 }
 
             }
-
-            
             
             // EMMA - S3 - PID (UNFINISHED)
 
@@ -414,6 +413,17 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
             }
         } // end of if (emma)
     } // end of jentries loop
+
+
+
+
+
+
+
+
+
+
+
     printf("\nEnd of main event loops");
     cout << "Entry " << analentries << " of " << analentries << " , 100% complete" << endl;
     fflush(stdout);

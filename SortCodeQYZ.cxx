@@ -176,7 +176,9 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
     // TCutG *Al26_cut = (TCutG *)cutFile->Get("Al26_cut");
 
     TFile *cutFile = new TFile("Mg26_Cut_July3.root");
+    TFile *kinCutFile = new TFile("S3KinematicsCut.root")
     TCutG *Mg26_cut = (TCutG *)cutFile->Get("CUTG");
+    TCUTG *kin_cut = (TCUTG *)kinCutFile->Get("CUTG");
 
     printf("\nSorting analysis events...\n");
     for (int jentry = 0; jentry < analentries; jentry++)
@@ -352,6 +354,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                     }
                 }
             }
+
             
             // ========================= REVERSE GATING EXC ==========================
             for (int i = 0; i < emma->GetSiMultiplicity(); i++)
@@ -385,6 +388,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
             // reset excitation enrgy 
             exc = -1; 
             tigress->ResetAddback();
+            double exckin; 
             for (int i = 0; i < emma->GetSiMultiplicity(); i++)
             {
                 si_hit = emma->GetSiHit(i);
@@ -393,13 +397,20 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                     for (int j = 0; j < s3->GetPixelMultiplicity(); j++)
                     {
                         s3hit = s3->GetPixelHit(j);
-                        // if (s3hit->GetTime() - si_hit->GetTime() > s3_emma_T[0] && s3hit->GetTime() - si_hit->GetTime() < s3_emma_T[1] && tigress)
                         s3pos = s3hit->GetPosition(s3_phi_offset, true);
-                        thetalab = s3pos.Theta();
-                        s3EThetaPID->Fill(thetalab*r2d, s3hit->GetEnergy()); 
+                        thetalab = s3pos.Theta(); // in degrees 
                         ekin = s3hit->GetEnergy();
-                        exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);
+                        s3EThetaPID->Fill(thetalab*r2d, ekin); 
                         mg26ExcPIDGated->Fill(exc); 
+                        exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);
+                        if (kin_cut->IsInside(thetaLab*r2d, ekin)
+                        {
+                            s3EThetaKinGate->Fill(thetaLab*r2d, ekin);
+                            exckin = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);
+                            mg26ExcKinGate->Fill(exckin);
+
+                        }
+                        
                         for (int k = 0; k < tigress->GetAddbackMultiplicity(); k++)
                         {
                             add_hit = tigress->GetAddbackHit(k);

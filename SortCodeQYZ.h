@@ -42,7 +42,7 @@ TH2F *emmaPgac,  *emmaPIDGatedPgac;
 
 // EMMA - S3 
 TH2F *emmaS3TimeGatedPgac; 
-TH1F *mg26ExcEmmaS3, *mg26ExcPIDGated, *mg26ExcTimeGated, *mg26Exc1808keV;
+TH1F *mg26ExcEmmaS3, *mg26ExcPIDGated, *mg26ExcTimeGated, *mg26Exc1808keV, *mg26ExcKinGate;
 
 // IC
 TH1F *emmaICSegmentEnergy[5];
@@ -50,7 +50,7 @@ TH2F *emmaICSegment;
 
 // S3
 TH1F *s3E, *s3RingsSectorsSinglesT, *s3RingCounts, *s3SecCounts, *s3Rate;
-TH2F *s3Rings, *s3Sectors, *s3RingsT, *s3SectorsT, *siETheta, *s3Hitmap, *s3RingsSectors, *s3ETheta, *s3EThetaPID;
+TH2F *s3Rings, *s3Sectors, *s3RingsT, *s3SectorsT, *siETheta, *s3Hitmap, *s3RingsSectors, *s3ETheta, *s3EThetaPID, *s3EThetaKinGate;
 
 // TOF
 TH1F *s3EmmaTof, *ssbICTof, *ssbSiTof, *tigICTof, *tigAnodeTof;
@@ -140,6 +140,8 @@ void SortCode::Initialise()
 	s3List->Add(s3EThetaPID);
 	s3ETheta = new TH2F("s3ETheta", "S3 Energy vs Lab Angle;Lab Angle; S3 Energy", 35, 130, 165, 16000, 0, 16000);
 	s3List->Add(s3ETheta);
+	s3EThetaKinGate = new TH2F("s3EThetaKinGate", "Kinamatics Gated S3 Energy vs Lab Angle; Lab Angle(degrees); S3 Energy(kev)", 35, 130, 165, 16000, 16000); 
+	s3List->Add(s3EThetaKinGate);
 
 	// EMMA - S3 
 	emmaS3TimeGatedPgac = new TH2F("emmaS3TimeGatedPgac", "PGAC Time Gated Hit Pattern", 160, -80, 80, 120, -60, 60);
@@ -152,6 +154,8 @@ void SortCode::Initialise()
 	emmaS3List->Add(mg26ExcTimeGated);
 	mg26Exc1808keV = new TH1F("mg26Exc1808keV", "Mg-26 Excitation Energy 1808keV Gated; Counts", 500, 0, 16); 
 	emmaS3List->Add(mg26Exc1808keV); 
+	mg26ExcKinGate = new TH1F("mg26ExcKinGate", "Mg-26 Excitation Energy Kinamatics Gated", 500, 0, 16);
+	emmaS3List->Add(mg26ExcKinGate);
 
 	// TOF
 	s3EmmaTof = new TH1F("s3EmmaTof", "S3 EMMA TOF; S3 EMMA Time Difference(ns);", 20000, -10000, 10000);

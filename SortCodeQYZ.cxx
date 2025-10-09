@@ -374,7 +374,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                                 thetalab = s3pos.Theta();
                                 ekin = s3hit->GetEnergy();
                                 exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);
-                                mg26Exc1808keV->Fill(exc); 
+                                //mg26Exc1808keV->Fill(exc); 
                                 
                             }
                         }
@@ -398,11 +398,12 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                     {
                         s3hit = s3->GetPixelHit(j);
                         s3pos = s3hit->GetPosition(s3_phi_offset, true);
-                        thetalab = s3pos.Theta(); // in degrees 
+                        thetalab = s3pos.Theta(); // in radians
                         ekin = s3hit->GetEnergy();
                         s3EThetaPID->Fill(thetalab*r2d, ekin); 
-                        mg26ExcPIDGated->Fill(exc); 
                         exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);
+                        mg26ExcPIDGated->Fill(exc); 
+                        
                         if (kin_cut->IsInside(thetalab*r2d, ekin))
                         {
                             s3EThetaKinGate->Fill(thetalab*r2d, ekin);
@@ -412,6 +413,10 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                             {
                                 add_hit = tigress->GetAddbackHit(l);
                                 gammaExcKinGate->Fill(add_hit->GetDoppler(particle_beta));
+                                if (add_hit->GetDoppler(particle_beta) > 1805 && add_hit->GetDoppler(particle_beta) < 1825)
+                                {
+                                    mg26Exc1808keV->Fill(exckin);
+                                }
                             }
 
                         }

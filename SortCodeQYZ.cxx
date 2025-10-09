@@ -178,7 +178,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
     TFile *cutFile = new TFile("Mg26_Cut_July3.root");
     TFile *kinCutFile = new TFile("S3KinematicsCut.root"); 
     TCutG *Mg26_cut = (TCutG *)cutFile->Get("CUTG");
-    TCUTG *kin_cut = (TCutG *)kinCutFile->Get("CUTG");
+    TCutG *kin_cut = (TCutG *)kinCutFile->Get("CUTG");
 
     printf("\nSorting analysis events...\n");
     for (int jentry = 0; jentry < analentries; jentry++)
@@ -403,9 +403,9 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                         s3EThetaPID->Fill(thetalab*r2d, ekin); 
                         mg26ExcPIDGated->Fill(exc); 
                         exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);
-                        if (kin_cut->IsInside(thetaLab*r2d, ekin)
+                        if (kin_cut->IsInside(thetalab*r2d, ekin)
                         {
-                            s3EThetaKinGate->Fill(thetaLab*r2d, ekin);
+                            s3EThetaKinGate->Fill(thetalab*r2d, ekin);
                             exckin = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);
                             mg26ExcKinGate->Fill(exckin);
 

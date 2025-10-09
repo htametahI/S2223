@@ -140,7 +140,7 @@ void SortCode::Initialise()
 	s3List->Add(s3EThetaPID);
 	s3ETheta = new TH2F("s3ETheta", "S3 Energy vs Lab Angle;Lab Angle; S3 Energy", 35, 130, 165, 16000, 0, 16000);
 	s3List->Add(s3ETheta);
-	s3EThetaKinGate = new TH2F("s3EThetaKinGate", "Kinamatics Gated S3 Energy vs Lab Angle; Lab Angle(degrees); S3 Energy(kev)", 35, 130, 165, 16000, 16000); 
+	s3EThetaKinGate = new TH2F("s3EThetaKinGate", "Kinamatics Gated S3 Energy vs Lab Angle; Lab Angle(degrees); S3 Energy(kev)", 35, 130, 165, 16000, 0, 16000); 
 	s3List->Add(s3EThetaKinGate);
 
 	// EMMA - S3 

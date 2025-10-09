@@ -32,7 +32,7 @@ using namespace std;
 TList *tigList, *emmaList, *s3List, *PIDList, *tofList, *emmaS3List;
 
 // TIGRESS
-TH1F *tigE, *tigAddE, *tigAddDoppE, *gammaExc, *gammaExc10p9, *gammaExc11p09; 
+TH1F *tigE, *tigAddE, *tigAddDoppE, *gammaExc, *gammaExc10p9, *gammaExc11p09, *gammaExcKinGate; 
 
 // EMMA
 TH1F *emmaXpos, *emmaYpos, *emmaICSum, *emmaICE[5], *emmaSSBE[2], *emmaSiE; 
@@ -99,7 +99,8 @@ void SortCode::Initialise()
 	tigList->Add(gammaExc10p9); 
 	gammaExc11p09 = new TH1F("tigExc11p09", "Tigress Addback Doppler Gated on 11.09MeV Excitation Energy; Counts", 500, 0, 4500); 
 	tigList->Add(gammaExc11p09); 
-
+	gammaExcKinGate = new TH1F("tigExcKinGate", "Tigress Addback Doppler Gated Kinamatics Gated Exc; Counts", 500, 0, 4500);
+	tigList->Add(gammaExcKinGate);
 
 	// EMMA
 	emmaXpos = new TH1F("EMMAPgacXPosition", "PGAC X Position;X Position (mm);Counts", 160, -80, 80);
@@ -152,9 +153,9 @@ void SortCode::Initialise()
 	emmaS3List->Add(mg26ExcPIDGated);
 	mg26ExcTimeGated = new TH1F("mg26ExcTime", "Mg-26 Excitation Energy Time Gated; Counts", 100, 0, 16);
 	emmaS3List->Add(mg26ExcTimeGated);
-	mg26Exc1808keV = new TH1F("mg26Exc1808keV", "Mg-26 Excitation Energy 1808keV Gated; Counts", 500, 0, 16); 
+	mg26Exc1808keV = new TH1F("mg26Exc1808keV", "Mg-26 Excitation Energy 1808keV Gated; Counts", 250, 0, 16); 
 	emmaS3List->Add(mg26Exc1808keV); 
-	mg26ExcKinGate = new TH1F("mg26ExcKinGate", "Mg-26 Excitation Energy Kinamatics Gated", 500, 0, 16);
+	mg26ExcKinGate = new TH1F("mg26ExcKinGate", "Mg-26 Excitation Energy Kinamatics Gated", 250, 0, 16);
 	emmaS3List->Add(mg26ExcKinGate);
 
 	// TOF

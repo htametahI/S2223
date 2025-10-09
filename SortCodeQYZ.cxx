@@ -408,13 +408,18 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                             s3EThetaKinGate->Fill(thetalab*r2d, ekin);
                             exckin = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);
                             mg26ExcKinGate->Fill(exckin);
+                            for (int l = 0; l < tigress->GetAddbackMultiplicity(), l++)
+                            {
+                                add_hit = tigress->GetAddbackHit(l);
+                                gammaExcKinGate->Fill(add_hit->GetDoppler(particle_beta));
+                            }
 
                         }
                         
                         for (int k = 0; k < tigress->GetAddbackMultiplicity(); k++)
                         {
                             add_hit = tigress->GetAddbackHit(k);
-                            addDopp26MgPIDS3T->Fill(add_hit->GetDoppler(particle_betaDoppler));
+                            addDopp26MgPIDS3T->Fill(add_hit->GetDoppler(particle_beta));
                             if (exc > 10.62 && exc < 12) gammaExc10p9->Fill(add_hit->GetDoppler(particle_beta));
                         }
                         tigress->ResetAddback();

@@ -25,6 +25,8 @@
 #include "TEmma.h"
 #include "TParserLibrary.h"
 #include "TEnv.h"
+#include <vector> 
+#include "TKinematics.h"
 using namespace std;
 
 TList *tigList, *emmaList, *s3List, *PIDList, *tofList, *emmaS3List;

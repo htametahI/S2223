@@ -134,8 +134,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
     // ====== Energy lost already calculated in LISE++ ==================
     double EBeam = 64.14166; // Beam energy half way into the target
 
-    //TReaction *reac = new TReaction("22Ne", "7Li", "3H", "26Mg", 64.14166, 0, true);
-    TReaction *reac = new TReaction("4He", "4He", "7Li", "H", 64.14166, 0, true);
+    TReaction *reac = new TReaction("22Ne", "7Li", "3H", "26Mg", 64.14166, 0, true);
 
     // Defining Pointers
     TEmmaHit *em_hit, *ic_hit, *si_hit, *ssb_hit, *trigger_hit, *anode_hit;

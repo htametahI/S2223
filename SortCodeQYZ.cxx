@@ -176,7 +176,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
     // TCutG *Al26_cut = (TCutG *)cutFile->Get("Al26_cut");
 
     TFile *cutFile = new TFile("Mg26_Cut_July3.root");
-    TFile *kinCutFile = new TFile("S3KinematicsCut.root"); 
+    TFile *kinCutFile = new TFile("S3KinematicsCut2.root"); 
     TCutG *Mg26_cut = (TCutG *)cutFile->Get("CUTG");
     TCutG *kin_cut = (TCutG *)kinCutFile->Get("CUTG");
 
@@ -418,7 +418,6 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                                     mg26Exc1808keV->Fill(exckin);
                                 }
                             }
-
                         }
                         
                         for (int k = 0; k < tigress->GetAddbackMultiplicity(); k++)

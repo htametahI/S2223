@@ -299,14 +299,12 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                         s3pos.SetX(s3pos.X() + s3_x_offset);                            // these are all 0s, TODO: CONFIRM THIS
                         s3pos.SetY(s3pos.Y() + s3_y_offset);
                         s3pos.SetZ(s3pos.Z() + s3_z_offset);
-                        if (s3hit->GetTime() - em_hit->GetTime() > s3_emma_T[0] && s3hit->GetTime() - em_hit->GetTime() < s3_emma_T[1])
-                        {
-                            thetalab = s3pos.Theta();                                                        // lab angle
-                            ekin = s3hit->GetEnergy();                                                       // triton energy
-                            exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);                              // 26Mg Excitation energy, Energy conversion from keV to MeV (1e-3), two-body reaction
-                            mg26ExcEmmaS3->Fill(exc);
+                        thetalab = s3pos.Theta();                                                        // lab angle
+                        ekin = s3hit->GetEnergy();                                                       // triton energy
+                        exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);                              // 26Mg Excitation energy, Energy conversion from keV to MeV (1e-3), two-body reaction
+                        mg26ExcEmmaS3->Fill(exc);
 
-                        }
+                        
                     }
                 }
             }
@@ -410,16 +408,18 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                                 s3EThetaKinGate->Fill(thetalab*r2d, ekin);
                                 exckin = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);
                                 mg26ExcKinGate->Fill(exckin);
+                                
                                 if (tigress) 
                                 {
                                     for (int l = 0; l < tigress->GetAddbackMultiplicity(); l++)
                                     {
-                                    add_hit = tigress->GetAddbackHit(l);
-                                    gammaExcKinGate->Fill(add_hit->GetDoppler(particle_beta));
-                                    if (add_hit->GetDoppler(particle_beta) > 1805 && add_hit->GetDoppler(particle_beta) < 1825)
-                                    {
-                                        mg26Exc1808keV->Fill(exckin);
-                                    }
+                                        add_hit = tigress->GetAddbackHit(l);
+                                        gammaExcKinGate->Fill(add_hit->GetDoppler(particle_beta));
+                                        if (exckin > 10.62 && exckin < 12) gammaExc10p9->Fill(add_hit->GetDoppler(particle_beta));
+                                        if (add_hit->GetDoppler(particle_beta) > 1805 && add_hit->GetDoppler(particle_beta) < 1825)
+                                        {
+                                            mg26Exc1808keV->Fill(exckin);
+                                        }
 
                                     }
                                 }
@@ -429,7 +429,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                             {
                                 add_hit = tigress->GetAddbackHit(k);
                                 addDopp26MgPIDS3T->Fill(add_hit->GetDoppler(particle_beta));
-                                if (exc > 10.62 && exc < 12) gammaExc10p9->Fill(add_hit->GetDoppler(particle_beta));
+
                             }
                             tigress->ResetAddback();
                         }

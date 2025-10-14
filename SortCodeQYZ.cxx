@@ -404,7 +404,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                         exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);
                         mg26ExcPIDGated->Fill(exc); 
                         
-                        if (kin_cut->IsInside(thetalab*r2d, ekin))
+                        if (kin_cut->IsInside(thetalab, ekin)) // change this to test if the cut works
                         {
                             s3EThetaKinGate->Fill(thetalab*r2d, ekin);
                             exckin = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);
@@ -417,6 +417,7 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                                 {
                                     mg26Exc1808keV->Fill(exckin);
                                 }
+
                             }
                         }
                         

@@ -394,40 +394,45 @@ void SortCode::SortData(char const *afile, char const *calfile, char const *outf
                 si_hit = emma->GetSiHit(i);
                 if (Mg26_cut->IsInside(si_hit->GetEnergy(), tempIC))
                 {
-                    for (int j = 0; j < s3->GetPixelMultiplicity(); j++)
-                    {
-                        s3hit = s3->GetPixelHit(j);
-                        s3pos = s3hit->GetPosition(s3_phi_offset, true);
-                        thetalab = s3pos.Theta(); // in radians
-                        ekin = s3hit->GetEnergy();
-                        s3EThetaPID->Fill(thetalab*r2d, ekin); 
-                        exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);
-                        mg26ExcPIDGated->Fill(exc); 
-                        
-                        if (kin_cut->IsInside(thetalab*r2d, ekin)) // change this to test if the cut works
+                    if (s3) {
+                        for (int j = 0; j < s3->GetPixelMultiplicity(); j++)
                         {
-                            s3EThetaKinGate->Fill(thetalab*r2d, ekin);
-                            exckin = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);
-                            mg26ExcKinGate->Fill(exckin);
-                            for (int l = 0; l < tigress->GetAddbackMultiplicity(); l++)
+                            s3hit = s3->GetPixelHit(j);
+                            s3pos = s3hit->GetPosition(s3_phi_offset, true);
+                            thetalab = s3pos.Theta(); // in radians
+                            ekin = s3hit->GetEnergy();
+                            s3EThetaPID->Fill(thetalab*r2d, ekin); 
+                            exc = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);
+                            mg26ExcPIDGated->Fill(exc); 
+                            
+                            if (kin_cut->IsInside(thetalab*r2d, ekin)) // change this to test if the cut works
                             {
-                                add_hit = tigress->GetAddbackHit(l);
-                                gammaExcKinGate->Fill(add_hit->GetDoppler(particle_beta));
-                                if (add_hit->GetDoppler(particle_beta) > 1805 && add_hit->GetDoppler(particle_beta) < 1825)
+                                s3EThetaKinGate->Fill(thetalab*r2d, ekin);
+                                exckin = reac->GetExcEnergy(ekin * 1e-3, thetalab, 2);
+                                mg26ExcKinGate->Fill(exckin);
+                                if (tigress) 
                                 {
-                                    mg26Exc1808keV->Fill(exckin);
-                                }
+                                    for (int l = 0; l < tigress->GetAddbackMultiplicity(); l++)
+                                    {
+                                    add_hit = tigress->GetAddbackHit(l);
+                                    gammaExcKinGate->Fill(add_hit->GetDoppler(particle_beta));
+                                    if (add_hit->GetDoppler(particle_beta) > 1805 && add_hit->GetDoppler(particle_beta) < 1825)
+                                    {
+                                        mg26Exc1808keV->Fill(exckin);
+                                    }
 
+                                    }
+                                }
                             }
+                            
+                            for (int k = 0; k < tigress->GetAddbackMultiplicity(); k++)
+                            {
+                                add_hit = tigress->GetAddbackHit(k);
+                                addDopp26MgPIDS3T->Fill(add_hit->GetDoppler(particle_beta));
+                                if (exc > 10.62 && exc < 12) gammaExc10p9->Fill(add_hit->GetDoppler(particle_beta));
+                            }
+                            tigress->ResetAddback();
                         }
-                        
-                        for (int k = 0; k < tigress->GetAddbackMultiplicity(); k++)
-                        {
-                            add_hit = tigress->GetAddbackHit(k);
-                            addDopp26MgPIDS3T->Fill(add_hit->GetDoppler(particle_beta));
-                            if (exc > 10.62 && exc < 12) gammaExc10p9->Fill(add_hit->GetDoppler(particle_beta));
-                        }
-                        tigress->ResetAddback();
                     }
                 }
             }
